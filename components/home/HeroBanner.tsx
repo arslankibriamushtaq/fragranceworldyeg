@@ -76,6 +76,13 @@ export default function HeroBanner() {
         {slides.map((slide, i) => (
           <SwiperSlide key={slide.id}>
             <div className="relative h-full bg-black flex items-center justify-center overflow-hidden">
+              {/* Blurred poster fills any space around the full (uncropped) video */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-cover bg-center scale-110 blur-2xl opacity-50"
+                style={{ backgroundImage: `url(${slide.video.replace(".mp4", ".jpg")})` }}
+              />
+
               {/* Video Background — only the active slide plays; others don't preload */}
               <video
                 ref={(el) => { videoRefs.current[i] = el; }}
@@ -84,7 +91,7 @@ export default function HeroBanner() {
                 playsInline
                 preload={i === 0 ? "auto" : "none"}
                 poster={slide.video.replace(".mp4", ".jpg")}
-                className="absolute inset-0 w-full h-full object-cover opacity-60"
+                className="absolute inset-0 w-full h-full object-contain opacity-70"
               >
                 <source src={slide.video} type="video/mp4" />
               </video>
