@@ -17,7 +17,7 @@ interface SearchResult {
   discount: number;
 }
 
-const trendingSearches = ["Baccarat Rouge 540", "Dior Sauvage", "Tom Ford", "Chanel", "Decants"];
+const trendingSearches = ["Lattafa", "Armaf", "Rasasi", "Ajmal", "Oud", "Attar", "Musk", "Amber"];
 
 export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [query, setQuery] = useState("");
@@ -68,43 +68,43 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] bg-forest-900/60 backdrop-blur-sm px-4"
           onClick={onClose}
         >
           <motion.div
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
+            initial={{ y: -20, opacity: 0, scale: 0.98 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: -20, opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="absolute top-0 left-0 right-0 bg-white shadow-2xl"
+            className="mx-auto mt-20 md:mt-28 max-w-2xl bg-white rounded-2xl shadow-luxury-lg border border-gold-100 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="max-w-3xl mx-auto px-4 md:px-6 py-6">
+            <div className="p-4 md:p-5">
               {/* Search Input */}
-              <div className="flex items-center gap-4">
-                <Search size={22} className="text-gold-400 flex-shrink-0" />
+              <div className="flex items-center gap-3 rounded-full bg-luxury-cream border border-gold-200 focus-within:border-gold-400 focus-within:bg-white transition-colors pl-4 pr-1.5 py-1.5">
+                <Search size={18} className="text-gold-500 flex-shrink-0" />
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder="Search fragrances, brands, notes..."
+                  placeholder="Search perfumes, brands, attars..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  className="flex-1 text-lg outline-none bg-transparent placeholder:text-gray-300 font-light"
+                  className="flex-1 min-w-0 text-base outline-none bg-transparent placeholder:text-forest-300 py-1.5"
                 />
                 {loading && <Loader2 size={18} className="animate-spin text-gold-400 flex-shrink-0" />}
                 <button
                   onClick={onClose}
-                  className="p-2 hover:bg-gray-100 transition-colors flex-shrink-0"
+                  aria-label="Close search"
+                  className="p-2 rounded-full hover:bg-gold-100 text-forest-500 transition-colors flex-shrink-0"
                 >
                   <X size={18} />
                 </button>
               </div>
 
-              <div className="w-full h-px bg-gradient-to-r from-transparent via-gold-400/40 to-transparent mt-4" />
 
               {/* Trending - show when no query */}
               {query.length < 2 && (
-                <div className="mt-5 pb-2">
+                <div className="mt-5 px-1 pb-1">
                   <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-1.5">
                     <TrendingUp size={12} /> Trending Searches
                   </p>
@@ -113,7 +113,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                       <button
                         key={term}
                         onClick={() => setQuery(term)}
-                        className="text-xs px-3 py-1.5 border border-gray-200 text-gray-600 hover:border-gold-400 hover:text-gold-600 hover:bg-gold-50 transition-all duration-200"
+                        className="text-xs px-3.5 py-1.5 rounded-full border border-gold-200 text-forest-600 hover:border-gold-400 hover:text-gold-600 hover:bg-luxury-cream transition-all duration-200"
                       >
                         {term}
                       </button>

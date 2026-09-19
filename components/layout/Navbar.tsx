@@ -66,6 +66,18 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Ctrl/⌘ + K opens search
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   // Close user menu on outside click
   useEffect(() => {
     const handleClick = () => setUserMenuOpen(false);
@@ -112,7 +124,7 @@ export default function Navbar() {
             </button>
 
             {/* Logo */}
-            <Link href="/" className="flex items-center group" aria-label="Fragrance World YEG — Home">
+            <Link href="/" className="flex items-center gap-3 group" aria-label="Fragrance World YEG — Home">
               <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
                 <Image
                   src="/logo-mark.png"
@@ -123,10 +135,14 @@ export default function Navbar() {
                   className="h-12 md:h-14 w-auto object-contain"
                 />
               </motion.div>
+              <div className="flex flex-col leading-none border-l border-gold-300/60 pl-3">
+                <span className="font-serif text-[17px] md:text-xl font-semibold tracking-[0.22em] text-forest-900">FRAGRANCE</span>
+                <span className="mt-1 font-serif text-[11px] md:text-[13px] tracking-[0.42em] text-gold-500">WORLD YEG</span>
+              </div>
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-7">
+            <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
               {navLinks.map((link) => {
                 const active = pathname === link.href.split("?")[0] && (link.href === "/" || link.href !== "/shop");
                 return (
@@ -165,10 +181,11 @@ export default function Navbar() {
               <button
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
-                className="hidden xl:flex items-center gap-2 w-36 border border-gray-200 hover:border-gold-400 px-3 py-1.5 text-xs text-gray-400 transition-colors"
+                className="hidden xl:flex items-center gap-2 w-44 rounded-full bg-luxury-cream border border-gold-200/70 hover:border-gold-400 hover:bg-white px-3.5 py-2 text-xs text-forest-400 transition-all duration-300"
               >
-                <Search size={14} />
-                Search
+                <Search size={14} className="text-gold-500" />
+                <span className="flex-1 text-left">Search perfumes...</span>
+                <kbd className="text-[10px] font-sans text-forest-300 border border-gold-200 rounded px-1">⌘K</kbd>
               </button>
               <motion.button
                 whileHover={{ scale: 1.1 }}
