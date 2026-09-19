@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { StaggerContainer, StaggerItem } from "@/components/ui/MotionElements";
-import { ChevronRight } from "lucide-react";
+import { AnimatedHeading, StaggerContainer, StaggerItem } from "@/components/ui/MotionElements";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 interface Brand {
   id: string;
@@ -11,6 +12,9 @@ interface Brand {
   logo?: string | null;
 }
 
+// One row on the homepage; the full list lives on /brands.
+const MAX_BRANDS = 6;
+
 export default function BrandsShowcase({ brands }: { brands: Brand[] }) {
   if (!brands.length) return null;
   return (
@@ -18,17 +22,11 @@ export default function BrandsShowcase({ brands }: { brands: Brand[] }) {
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold-400/20 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-end justify-between gap-4 mb-8">
-          <h2 className="font-serif text-3xl md:text-4xl text-gray-900">Shop by Brands</h2>
-          <Link href="/brands" className="group inline-flex items-center gap-1 text-sm md:text-base text-gray-800 hover:text-gold-600 transition-colors whitespace-nowrap">
-            More brands
-            <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-        </div>
+        <AnimatedHeading subtitle="Explore Our Houses" title="Shop by Brands" />
 
-        <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6" staggerDelay={0.05}>
-          {brands.map((brand) => (
-            <StaggerItem key={brand.id}>
+        <StaggerContainer className="flex lg:grid lg:grid-cols-6 gap-4 md:gap-6 overflow-x-auto lg:overflow-visible snap-x snap-mandatory pb-2 -mx-4 px-4 lg:mx-0 lg:px-0" staggerDelay={0.05}>
+          {brands.slice(0, MAX_BRANDS).map((brand) => (
+            <StaggerItem key={brand.id} className="shrink-0 w-[42%] sm:w-[30%] lg:w-auto snap-start">
               <Link
                 href={`/brands/${brand.slug}`}
                 className="group flex flex-col items-center h-full bg-white border border-gray-800 p-4 md:p-5 hover:shadow-gold hover:-translate-y-1 transition-all duration-300"
@@ -53,6 +51,19 @@ export default function BrandsShowcase({ brands }: { brands: Brand[] }) {
             </StaggerItem>
           ))}
         </StaggerContainer>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="text-center mt-12"
+        >
+          <Link href="/brands" className="group inline-flex items-center gap-2 btn-outline-gold">
+            View All Brands
+            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </motion.div>
       </div>
     </section>
   );
