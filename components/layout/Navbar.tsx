@@ -22,13 +22,6 @@ const CATEGORY_LINKS = [
   { href: "/shop?category=body-sprays-room-fresheners", label: "Body Sprays & Room Fresheners" },
 ];
 
-const SHOP_LINKS = [
-  { href: "/shop", label: "All" },
-  { href: "/shop?gender=MENS", label: "Men" },
-  { href: "/shop?gender=WOMENS", label: "Women" },
-  { href: "/shop?gender=UNISEX", label: "Unisex" },
-];
-
 const MENU_BRAND_LIMIT = 8;
 
 const DECANT_LINKS = [
@@ -64,7 +57,6 @@ export default function Navbar() {
 
   const navLinks: NavItem[] = [
     { href: "/", label: "Home" },
-    { href: "/shop", label: "Shop", children: SHOP_LINKS },
     { href: "/shop", label: "Categories", children: CATEGORY_LINKS },
     { href: "/shop?filter=new", label: "New Arrivals" },
     { href: "/brands", label: "Brands", children: [...brands, { href: "/brands", label: "View All Brands" }] },
