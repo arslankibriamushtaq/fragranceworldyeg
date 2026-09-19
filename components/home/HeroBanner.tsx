@@ -28,15 +28,6 @@ const slides = [
     accent: "5ml \u2022 10ml",
     video: "/videos/hero-decant.mp4",
   },
-  {
-    id: 3,
-    title: "New",
-    titleAccent: "Arrivals",
-    subtitle: "Fresh From The Maison",
-    description: "The latest additions to our collection, shipped Canada wide",
-    accent: "Canada Wide Shipping",
-    video: "/videos/hero-gold-liquid.mp4",
-  },
 ];
 
 export default function HeroBanner() {

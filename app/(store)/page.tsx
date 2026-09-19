@@ -1,4 +1,5 @@
 import HeroBanner from "@/components/home/HeroBanner";
+import PromoBanners from "@/components/home/PromoBanners";
 import NewArrivals from "@/components/home/NewArrivals";
 import DecantsSection from "@/components/home/DecantsSection";
 import BestSellers from "@/components/home/BestSellers";
@@ -11,7 +12,7 @@ export const dynamic = "force-dynamic";
 
 async function getHomeData() {
   try {
-    const [newArrivals, bestSellers, brands, decants] = await Promise.all([
+    const [newArrivals, bestSellers, brands, decants, banners] = await Promise.all([
       prisma.product.findMany({
         where: { isNewArrival: true },
         take: 8,
@@ -33,10 +34,14 @@ async function getHomeData() {
         include: { brand: true, variants: true },
         orderBy: { createdAt: "desc" },
       }),
+      prisma.banner.findMany({
+        where: { isActive: true },
+        orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+      }),
     ]);
-    return { newArrivals, bestSellers, brands, decants };
+    return { newArrivals, bestSellers, brands, decants, banners };
   } catch {
-    return { newArrivals: [], bestSellers: [], brands: [], decants: [] };
+    return { newArrivals: [], bestSellers: [], brands: [], decants: [], banners: [] };
   }
 }
 
@@ -45,6 +50,7 @@ export default async function HomePage() {
   return (
     <>
       <HeroBanner />
+      <PromoBanners banners={data.banners} />
       <BrandsShowcase brands={data.brands} />
       <NewArrivals products={data.newArrivals} />
       <BestSellers products={data.bestSellers} />
