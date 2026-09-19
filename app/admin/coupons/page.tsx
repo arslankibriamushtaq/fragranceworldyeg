@@ -69,15 +69,15 @@ export default function AdminCouponsPage() {
               <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Discount Type</label>
               <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="input-luxury">
                 <option value="PERCENTAGE">Percentage (%)</option>
-                <option value="FIXED">Fixed Amount (PKR)</option>
+                <option value="FIXED">Fixed Amount (CAD)</option>
               </select>
             </div>
             <div>
-              <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Value ({form.type === "PERCENTAGE" ? "%" : "PKR"})</label>
+              <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Value ({form.type === "PERCENTAGE" ? "%" : "CAD"})</label>
               <input type="number" value={form.value} onChange={(e) => setForm({ ...form, value: Number(e.target.value) })} className="input-luxury" placeholder="20" />
             </div>
             <div>
-              <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Minimum Order (PKR)</label>
+              <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Minimum Order (CAD)</label>
               <input type="number" value={form.minOrder} onChange={(e) => setForm({ ...form, minOrder: Number(e.target.value) })} className="input-luxury" placeholder="0" />
             </div>
             <div>
@@ -117,8 +117,8 @@ export default function AdminCouponsPage() {
                 <tr key={coupon.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3 font-mono text-sm font-semibold text-gray-900">{coupon.code}</td>
                   <td className="px-4 py-3 text-sm text-gray-600">{coupon.type}</td>
-                  <td className="px-4 py-3 text-sm font-medium">{coupon.type === "PERCENTAGE" ? `${coupon.value}%` : `PKR ${coupon.value}`}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">PKR {coupon.minOrder}</td>
+                  <td className="px-4 py-3 text-sm font-medium">{coupon.type === "PERCENTAGE" ? `${coupon.value}%` : `CA$${coupon.value}`}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600">CA$ {coupon.minOrder}</td>
                   <td className="px-4 py-3 text-sm text-gray-600">{coupon.usedCount}/{coupon.maxUses || "∞"}</td>
                   <td className="px-4 py-3">{coupon.freeShipping ? <Check size={16} className="text-green-500" /> : <X size={16} className="text-gray-300" />}</td>
                   <td className="px-4 py-3 text-xs text-gray-400">{coupon.expiresAt ? new Date(coupon.expiresAt).toLocaleDateString() : "Never"}</td>

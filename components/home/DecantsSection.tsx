@@ -36,7 +36,7 @@ export default function DecantsSection({ products }: { products: Product[] }) {
 
         <FadeUp delay={0.2}>
           <p className="text-gray-500 text-center text-sm max-w-lg mx-auto mb-12 -mt-6">
-            Sample luxury fragrances in small quantities. Available in 2ml, 5ml, 10ml, and 15ml sizes.
+            Sample luxury fragrances in small quantities. Available in 5ml and 10ml sizes.
           </p>
         </FadeUp>
 

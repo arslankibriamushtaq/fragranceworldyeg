@@ -1,51 +1,61 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import { SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION } from "@/lib/site";
 import AuthProvider from "@/components/providers/AuthProvider";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
-  title: {
-    default: "Fragrance World YEG - Premium Fragrances & Decants",
-    template: "%s | Fragrance World YEG",
-  },
-  description:
-    "Discover the world's finest perfumes and exclusive decants. Shop luxury fragrances from top brands like Dior, Chanel, Tom Ford, and more.",
+  title: `${SITE_NAME} - ${SITE_TAGLINE}`,
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
   keywords: [
-    "luxury perfumes",
+    "Arabic perfumes",
+    "perfume oils",
+    "attars",
     "fragrance decants",
-    "designer perfumes",
-    "niche fragrances",
-    "perfume shop",
-    "buy perfume online",
+    "perfume shop Edmonton",
+    "buy perfume online Canada",
+    "Fragrance World YEG",
+    "oud perfume",
   ],
+  icons: {
+    icon: [{ url: "/icon.png", type: "image/png", sizes: "512x512" }],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180" }],
+  },
+  appleWebApp: { title: SITE_NAME, statusBarStyle: "black-translucent" },
+  formatDetection: { telephone: false },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_CA",
     url: process.env.NEXT_PUBLIC_APP_URL,
-    siteName: "Fragrance World YEG",
-    title: "Fragrance World YEG - Premium Fragrances & Decants",
-    description:
-      "Discover the world's finest perfumes and exclusive decants.",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} - ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Fragrance World YEG",
+        alt: SITE_NAME,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fragrance World YEG - Premium Fragrances & Decants",
-    description: "Discover the world's finest perfumes and exclusive decants.",
+    title: `${SITE_NAME} - ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
     follow: true,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0d0b0b",
 };
 
 export default function RootLayout({
@@ -64,9 +74,9 @@ export default function RootLayout({
               toastOptions={{
                 duration: 3000,
                 style: {
-                  background: "#1a1a1a",
+                  background: "#0d0b0b",
                   color: "#fff",
-                  borderLeft: "3px solid #d4af37",
+                  borderLeft: "3px solid #b88c65",
                   borderRadius: "0",
                   fontSize: "14px",
                 },

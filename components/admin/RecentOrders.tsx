@@ -39,7 +39,7 @@ export default function RecentOrders({ orders }: { orders: any[] }) {
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-700">{order.name}</td>
                   <td className="px-4 py-3 text-sm text-gray-500">{order.items.length} item(s)</td>
-                  <td className="px-4 py-3 text-sm font-semibold text-gray-900">PKR {order.total.toLocaleString()}</td>
+                  <td className="px-4 py-3 text-sm font-semibold text-gray-900">CA$ {order.total.toLocaleString()}</td>
                   <td className="px-4 py-3">
                     <span className={`text-xs px-2 py-0.5 rounded font-medium ${statusColors[order.status] || "bg-gray-100 text-gray-600"}`}>
                       {order.status}

@@ -1,18 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --primary: #1f6043;
-  --primary-dark: #163d2d;
-  --accent: #d4af37;
-  --accent-dark: #c9a227;
-  --secondary: #0f2d21;
-  --background: #f6faf7;
-  --foreground: #122c20;
-  --font-playfair: 'Playfair Display', serif;
+  --primary: #0d0b0b;
+  --primary-dark: #000000;
+  --accent: #b88c65;
+  --accent-dark: #a77a54;
+  --secondary: #0d0b0b;
+  --background: #fffaf7;
+  --foreground: #0d0b0b;
+  --font-playfair: 'Cormorant Garamond', Georgia, serif;
   --font-inter: 'Inter', sans-serif;
 }
 
@@ -39,8 +39,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Selection color */
 ::selection {
-  background: rgba(31, 96, 67, 0.25);
-  color: #0f2d21;
+  background: rgba(184, 140, 101, 0.3);
+  color: #0d0b0b;
 }
 
 @layer base {
@@ -146,13 +146,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .swiper-pagination-bullet-active {
-  background: #1f6043 !important;
+  background: #b88c65 !important;
   width: 40px !important;
 }
 
 .swiper-button-next,
 .swiper-button-prev {
-  color: #1f6043 !important;
+  color: #b88c65 !important;
   opacity: 0.6;
   transition: opacity 0.3s ease;
 }
@@ -173,16 +173,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-track {
-  background: #eef5f0;
+  background: #fff3ee;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #1f6043, #163d2d);
+  background: linear-gradient(to bottom, #b88c65, #8c6444);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #163d2d, #0f2d21);
+  background: linear-gradient(to bottom, #8c6444, #553d2b);
 }
 
 /* Loading skeleton */
@@ -197,7 +197,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Star rating */
 .star-filled {
-  color: #d4af37;
+  color: #b88c65;
 }
 /* (gold retained for star ratings as a warm accent) */
 
@@ -220,6 +220,6 @@ img {
 
 /* Focus visible styles */
 :focus-visible {
-  outline: 2px solid #1f6043;
+  outline: 2px solid #b88c65;
   outline-offset: 2px;
 }

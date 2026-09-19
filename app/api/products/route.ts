@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { generateSlug } from "@/lib/utils";
+import { generateSlug, isAllowedDecantSize } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -60,6 +60,9 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { name, brandId, categoryId, type, description, fragranceNotes, gender, images, basePrice, discount, isFeatured, isNewArrival, isBestSeller, metaTitle, metaDescription, variants } = body;
+    if (type === "DECANT" && variants?.some((v: any) => !isAllowedDecantSize(String(v.size)))) {
+      return NextResponse.json({ error: "Decants are only available in 5ml and 10ml" }, { status: 400 });
+    }
 
     const slug = generateSlug(name);
 

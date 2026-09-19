@@ -30,15 +30,20 @@ async function getProduct(slug: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = await getProduct(params.slug);
-  if (!product) return { title: "Product Not Found" };
+  if (!product) return {};
   return {
-    title: product.metaTitle || `${product.name} by ${product.brand.name}`,
     description: product.metaDescription || product.description.substring(0, 160),
     openGraph: {
       title: product.name,
       description: product.description.substring(0, 160),
       images: product.images[0] ? [{ url: product.images[0] }] : [],
     },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      images: product.images[0] ? [product.images[0]] : [],
+    },
+    alternates: { canonical: `/products/${product.slug}` },
   };
 }
 

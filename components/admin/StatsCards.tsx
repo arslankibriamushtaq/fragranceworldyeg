@@ -10,7 +10,7 @@ interface StatsCardsProps {
 
 export default function StatsCards({ totalOrders, ordersToday, totalCustomers, totalProducts, totalRevenue }: StatsCardsProps) {
   const stats = [
-    { label: "Total Revenue", value: `PKR ${totalRevenue.toLocaleString()}`, icon: TrendingUp, color: "bg-gold-400", change: "+12%" },
+    { label: "Total Revenue", value: `CA$${totalRevenue.toLocaleString()}`, icon: TrendingUp, color: "bg-gold-400", change: "+12%" },
     { label: "Total Orders", value: totalOrders.toLocaleString(), icon: ShoppingBag, color: "bg-blue-500", change: "" },
     { label: "Orders Today", value: ordersToday.toLocaleString(), icon: Calendar, color: "bg-green-500", change: "" },
     { label: "Customers", value: totalCustomers.toLocaleString(), icon: Users, color: "bg-purple-500", change: "" },

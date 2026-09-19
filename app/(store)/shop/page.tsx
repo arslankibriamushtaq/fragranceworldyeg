@@ -4,7 +4,6 @@ import ShopContent from "@/components/shop/ShopContent";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Shop All Fragrances",
   description: "Browse our complete collection of luxury perfumes and decants",
 };
 

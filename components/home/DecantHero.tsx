@@ -64,7 +64,7 @@ export default function DecantHero() {
           className="text-gray-300 text-lg max-w-xl mx-auto mb-8"
         >
           Sample the world&apos;s finest fragrances before committing to a full bottle.
-          Available in 2ml, 5ml, 10ml, and 15ml sizes.
+          Available in 5ml and 10ml sizes.
         </motion.p>
 
         <motion.div
@@ -73,7 +73,7 @@ export default function DecantHero() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="flex flex-wrap gap-3 justify-center"
         >
-          {["2ml", "5ml", "10ml", "15ml"].map((size, i) => (
+          {["5ml", "10ml"].map((size, i) => (
             <motion.span
               key={size}
               initial={{ opacity: 0, scale: 0.8 }}

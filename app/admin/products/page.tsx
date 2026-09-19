@@ -95,7 +95,7 @@ export default function AdminProductsPage() {
                           {product.type === "DECANT" ? "Decant" : "Full Bottle"}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-sm font-semibold">PKR {product.basePrice?.toLocaleString()}</td>
+                      <td className="px-4 py-3 text-sm font-semibold">CA$ {product.basePrice?.toLocaleString()}</td>
                       <td className="px-4 py-3">
                         <span className={`text-xs font-medium ${totalStock === 0 ? "text-red-600" : totalStock <= 10 ? "text-yellow-600" : "text-green-600"}`}>
                           {totalStock} units

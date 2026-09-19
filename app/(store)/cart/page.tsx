@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Trash2, ShoppingBag, ArrowRight, Tag, X } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, calculateShipping, FREE_SHIPPING_THRESHOLD } from "@/lib/utils";
 import toast from "react-hot-toast";
 
 export default function CartPage() {
@@ -14,7 +14,7 @@ export default function CartPage() {
 
   const subtotal = getSubtotal();
   const total = getTotal();
-  const shipping = total >= 5000 ? 0 : 250;
+  const shipping = calculateShipping(total);
 
   const handleApplyCoupon = async () => {
     if (!couponInput.trim()) return;
@@ -136,7 +136,7 @@ export default function CartPage() {
                 <span className={shipping === 0 ? "text-green-600" : ""}>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
               </div>
               {shipping > 0 && (
-                <p className="text-xs text-gray-400">Add {formatPrice(5000 - subtotal)} more for free shipping</p>
+                <p className="text-xs text-gray-400">Add {formatPrice(FREE_SHIPPING_THRESHOLD - subtotal)} more for free shipping</p>
               )}
               <div className="border-t border-gray-100 pt-2 flex justify-between font-semibold text-base">
                 <span>Total</span>

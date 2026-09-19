@@ -7,14 +7,14 @@ export async function GET() {
   try {
     const theme = await prisma.themeSettings.findFirst();
     return NextResponse.json(theme || {
-      primaryColor: "#d4af37",
-      secondaryColor: "#1a1a1a",
-      accentColor: "#c9a227",
+      primaryColor: "#b88c65",
+      secondaryColor: "#0d0b0b",
+      accentColor: "#a77a54",
       fontHeading: "Playfair Display",
       fontBody: "Inter",
     });
   } catch {
-    return NextResponse.json({ primaryColor: "#d4af37", secondaryColor: "#1a1a1a", accentColor: "#c9a227" });
+    return NextResponse.json({ primaryColor: "#b88c65", secondaryColor: "#0d0b0b", accentColor: "#a77a54" });
   }
 }
 

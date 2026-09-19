@@ -81,7 +81,7 @@ export default async function DashboardPage() {
                   <span className={`text-[10px] px-2 py-1 uppercase tracking-wider font-medium rounded ${statusColors[order.status] || "bg-gray-100 text-gray-600"}`}>
                     {order.status}
                   </span>
-                  <p className="font-semibold text-sm text-gold-500">PKR {order.total.toLocaleString()}</p>
+                  <p className="font-semibold text-sm text-gold-500">CA$ {order.total.toLocaleString()}</p>
                 </div>
               </div>
             ))}

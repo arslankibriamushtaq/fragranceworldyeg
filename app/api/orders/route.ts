@@ -4,14 +4,28 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { generateOrderNumber } from "@/lib/utils";
 import { sendOrderConfirmationEmail } from "@/lib/mail";
+import { stripe } from "@/lib/stripe";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const body = await req.json();
     const { items, paymentMethod, stripePaymentId, name, phone, email, address, city, notes, couponCode, subtotal, discount, shipping, total } = body;
+
+    // Card payments only — no cash on delivery.
+    if (paymentMethod !== "STRIPE" || !stripePaymentId) {
+      return NextResponse.json({ error: "Only card payments are accepted" }, { status: 400 });
+    }
+
+    // Confirm with Stripe that this payment really succeeded for this amount and hasn't been used before.
+    if (!stripe) return NextResponse.json({ error: "Card payments are not configured" }, { status: 500 });
+    const intent = await stripe.paymentIntents.retrieve(stripePaymentId);
+    if (intent.status !== "succeeded" || intent.currency !== "cad" || intent.amount !== Math.round(Number(total) * 100)) {
+      return NextResponse.json({ error: "Payment could not be verified" }, { status: 400 });
+    }
+    const alreadyUsed = await prisma.order.findFirst({ where: { stripePaymentId } });
+    if (alreadyUsed) return NextResponse.json({ error: "Payment already used for another order" }, { status: 400 });
 
     // Validate stock
     for (const item of items) {
@@ -25,7 +39,7 @@ export async function POST(req: NextRequest) {
 
     const order = await prisma.order.create({
       data: {
-        userId: (session.user as any).id,
+        userId: (session?.user as any)?.id || null,
         orderNumber,
         paymentMethod,
         paymentStatus: stripePaymentId ? "PAID" : "PENDING",

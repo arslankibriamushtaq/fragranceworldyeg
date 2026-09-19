@@ -69,7 +69,7 @@ export default function ProfilePage() {
         </div>
         <div>
           <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Phone Number</label>
-          <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="input-luxury" placeholder="+92 300 0000000" />
+          <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="input-luxury" placeholder="+1 780 000 0000" />
         </div>
         <div>
           <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Address</label>

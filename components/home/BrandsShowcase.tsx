@@ -15,11 +15,11 @@ interface Brand {
 export default function BrandsShowcase({ brands }: { brands: Brand[] }) {
   if (!brands.length) return null;
   return (
-    <section className="py-20 bg-luxury-light relative">
+    <section className="py-16 bg-luxury-cream relative">
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold-400/20 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4">
-        <AnimatedHeading subtitle="Our Partners" title="Luxury Brands" />
+        <AnimatedHeading subtitle="Explore Our Houses" title="Shop by Brands" />
 
         <StaggerContainer className="flex flex-wrap justify-center gap-4" staggerDelay={0.05}>
           {brands.map((brand) => (

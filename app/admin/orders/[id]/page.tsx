@@ -60,7 +60,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
           <h3 className="font-semibold text-gray-900 mb-3">Payment</h3>
           <p className="text-sm text-gray-600">Method: {order.paymentMethod.replace("_", " ")}</p>
           <p className="text-sm text-gray-600">Status: <span className={order.paymentStatus === "PAID" ? "text-green-600 font-medium" : "text-yellow-600"}>{order.paymentStatus}</span></p>
-          <p className="text-sm font-bold text-gray-900 mt-2">Total: PKR {order.total.toLocaleString()}</p>
+          <p className="text-sm font-bold text-gray-900 mt-2">Total: CA$ {order.total.toLocaleString()}</p>
         </div>
       </div>
 
@@ -77,15 +77,15 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                 <p className="font-medium text-sm text-gray-900">{item.name}</p>
                 <p className="text-xs text-gray-500">{item.size} × {item.quantity}</p>
               </div>
-              <p className="font-semibold text-sm">PKR {(item.price * item.quantity).toLocaleString()}</p>
+              <p className="font-semibold text-sm">CA$ {(item.price * item.quantity).toLocaleString()}</p>
             </div>
           ))}
         </div>
         <div className="border-t border-gray-100 pt-3 mt-3 space-y-1 text-sm">
-          <div className="flex justify-between"><span className="text-gray-500">Subtotal</span><span>PKR {order.subtotal.toLocaleString()}</span></div>
-          {order.discount > 0 && <div className="flex justify-between text-green-600"><span>Discount</span><span>-PKR {order.discount.toLocaleString()}</span></div>}
-          <div className="flex justify-between"><span className="text-gray-500">Shipping</span><span>{order.shipping === 0 ? "Free" : `PKR ${order.shipping.toLocaleString()}`}</span></div>
-          <div className="flex justify-between font-bold text-base"><span>Total</span><span className="text-gold-500">PKR {order.total.toLocaleString()}</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">Subtotal</span><span>CA$ {order.subtotal.toLocaleString()}</span></div>
+          {order.discount > 0 && <div className="flex justify-between text-green-600"><span>Discount</span><span>-CA$ {order.discount.toLocaleString()}</span></div>}
+          <div className="flex justify-between"><span className="text-gray-500">Shipping</span><span>{order.shipping === 0 ? "Free" : `CA$${order.shipping.toLocaleString()}`}</span></div>
+          <div className="flex justify-between font-bold text-base"><span>Total</span><span className="text-gold-500">CA$ {order.total.toLocaleString()}</span></div>
         </div>
       </div>
 

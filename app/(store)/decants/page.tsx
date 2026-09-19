@@ -5,8 +5,7 @@ import DecantHero from "@/components/home/DecantHero";
 import DecantListing from "@/components/decants/DecantListing";
 
 export const metadata: Metadata = {
-  title: "Fragrance Decants",
-  description: "Try luxury fragrances in 2ml, 5ml, 10ml, and 15ml decants. Sample before you commit.",
+  description: "Try luxury fragrances in 5ml and 10ml decants. Sample before you commit.",
 };
 
 // Reads live data from the DB — render per request instead of prerendering at build time.

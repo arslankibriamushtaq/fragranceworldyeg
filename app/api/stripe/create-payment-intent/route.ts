@@ -5,14 +5,13 @@ import { authOptions } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
     if (!stripe) return NextResponse.json({ error: "Stripe is not configured" }, { status: 500 });
-    const { amount, currency = "pkr" } = await req.json();
+    const { amount, currency = "cad" } = await req.json();
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100),
       currency,
-      metadata: { userId: (session.user as any).id },
+      metadata: { userId: (session?.user as any)?.id || "guest" },
     });
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });
   } catch (error: any) {

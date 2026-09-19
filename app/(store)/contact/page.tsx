@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { Phone, Mail, MapPin, Send } from "lucide-react";
 import toast from "react-hot-toast";
-import type { Metadata } from "next";
+import { CONTACT, SOCIAL_LINKS } from "@/lib/site";
+import { FacebookIcon, InstagramIcon, TikTokIcon } from "@/components/ui/SocialIcons";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
@@ -36,26 +37,41 @@ export default function ContactPage() {
                 <MapPin size={20} className="text-gold-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium mb-1">Our Location</p>
-                  <p className="text-gray-400 text-sm">Lahore, Pakistan</p>
+                  <p className="text-gray-400 text-sm">{CONTACT.location}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-4">
+              {CONTACT.phone && <div className="flex items-start gap-4">
                 <Phone size={20} className="text-gold-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium mb-1">Call Us</p>
-                  <a href="tel:+923001234567" className="text-gray-400 text-sm hover:text-gold-400 transition-colors">+92 300 1234567</a>
+                  <a href={`tel:${CONTACT.phone.replace(/\s+/g, "")}`} className="text-gray-400 text-sm hover:text-gold-400 transition-colors">{CONTACT.phone}</a>
                 </div>
-              </div>
-              <div className="flex items-start gap-4">
+              </div>}
+              {CONTACT.email && <div className="flex items-start gap-4">
                 <Mail size={20} className="text-gold-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium mb-1">Email Us</p>
-                  <a href="mailto:info@luxescents.com" className="text-gray-400 text-sm hover:text-gold-400 transition-colors">info@luxescents.com</a>
+                  <a href={`mailto:${CONTACT.email}`} className="text-gray-400 text-sm hover:text-gold-400 transition-colors">{CONTACT.email}</a>
                 </div>
-              </div>
+              </div>}
             </div>
 
             <div className="mt-8 pt-6 border-t border-gray-700">
+              <p className="text-sm text-gray-400 mb-3">Follow Us</p>
+              <div className="flex gap-3">
+                {[
+                  { href: SOCIAL_LINKS.instagram, Icon: InstagramIcon, label: "Instagram" },
+                  { href: SOCIAL_LINKS.facebook, Icon: FacebookIcon, label: "Facebook" },
+                  { href: SOCIAL_LINKS.tiktok, Icon: TikTokIcon, label: "TikTok" },
+                ].map(({ href, Icon, label }) => (
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="p-2.5 border border-gray-700 hover:border-gold-400 hover:text-gold-400 transition-colors">
+                    <Icon size={16} />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-gray-700">
               <p className="text-sm text-gray-400">Business Hours</p>
               <p className="text-sm text-gray-300 mt-2">Mon - Sat: 10:00 AM - 8:00 PM</p>
               <p className="text-sm text-gray-300">Sunday: 12:00 PM - 6:00 PM</p>

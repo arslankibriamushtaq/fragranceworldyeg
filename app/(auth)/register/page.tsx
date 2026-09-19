@@ -79,7 +79,7 @@ export default function RegisterPage() {
             </div>
             <div>
               <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Phone (Optional)</label>
-              <input {...register("phone")} className="input-luxury" placeholder="+92 300 0000000" />
+              <input {...register("phone")} className="input-luxury" placeholder="+1 780 000 0000" />
             </div>
             <div>
               <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Password</label>

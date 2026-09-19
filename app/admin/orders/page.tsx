@@ -97,7 +97,7 @@ export default function AdminOrdersPage() {
                     <td className="px-4 py-3 text-sm text-gray-700">{order.name}</td>
                     <td className="px-4 py-3 text-xs text-gray-500">{order.email}</td>
                     <td className="px-4 py-3 text-sm text-gray-500">{order.items?.length || 0}</td>
-                    <td className="px-4 py-3 text-sm font-semibold">PKR {order.total?.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-sm font-semibold">CA$ {order.total?.toLocaleString()}</td>
                     <td className="px-4 py-3">
                       <span className={`text-xs px-2 py-0.5 rounded font-medium ${order.paymentStatus === "PAID" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}>
                         {order.paymentMethod?.replace("_", " ")}

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 
 function ConfettiPiece({ index }: { index: number }) {
-  const colors = ["#d4af37", "#c9a227", "#f0d060", "#e8c84a", "#b8960f", "#fff3c4", "#fbbf24", "#f59e0b"];
+  const colors = ["#b88c65", "#a77a54", "#dcb68f", "#ead0b5", "#8c6444", "#ffe4d9", "#0d0b0b", "#f5e8db"];
   const color = colors[index % colors.length];
   const left = Math.random() * 100;
   const delay = Math.random() * 3;

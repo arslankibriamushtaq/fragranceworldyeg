@@ -49,7 +49,7 @@ export default async function OrdersPage() {
                   <span className={`text-xs px-3 py-1 uppercase tracking-wider font-medium ${statusColors[order.status] || "bg-gray-100 text-gray-600"}`}>
                     {order.status}
                   </span>
-                  <span className="font-bold text-gold-500">PKR {order.total.toLocaleString()}</span>
+                  <span className="font-bold text-gold-500">CA$ {order.total.toLocaleString()}</span>
                 </div>
               </div>
               <div className="border-t border-gray-50 pt-4">
@@ -58,7 +58,7 @@ export default async function OrdersPage() {
                   {order.items.map((item) => (
                     <div key={item.id} className="flex justify-between text-sm">
                       <span className="text-gray-700">{item.name} <span className="text-gray-400">({item.size})</span> × {item.quantity}</span>
-                      <span className="font-medium">PKR {(item.price * item.quantity).toLocaleString()}</span>
+                      <span className="font-medium">CA$ {(item.price * item.quantity).toLocaleString()}</span>
                     </div>
                   ))}
                 </div>

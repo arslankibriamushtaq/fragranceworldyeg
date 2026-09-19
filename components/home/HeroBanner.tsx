@@ -7,19 +7,16 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
-import Link from "next/link";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 const slides = [
   {
     id: 1,
     title: "The Art of",
     titleAccent: "Fragrance",
-    subtitle: "Discover Luxury Perfumes",
-    description: "Explore our curated collection of the world's finest fragrances from legendary maisons",
-    cta: "Shop Collection",
-    ctaLink: "/shop",
-    accent: "Dior \u2022 Chanel \u2022 Tom Ford",
+    subtitle: "Authentic Arabic Perfumes",
+    description: "An extensive range of authentic Arabic perfumes and perfume oils at highly competitive prices",
+    accent: "100% Authentic",
     video: "/videos/hero-perfume.mp4",
   },
   {
@@ -27,10 +24,8 @@ const slides = [
     title: "Exclusive",
     titleAccent: "Decants",
     subtitle: "Try Before You Commit",
-    description: "Sample luxury fragrances in 2ml, 5ml, 10ml, and 15ml sizes at unbeatable prices",
-    cta: "Explore Decants",
-    ctaLink: "/decants",
-    accent: "Starting from PKR 500",
+    description: "Try your favourite fragrances in 5ml and 10ml decants before buying a full bottle",
+    accent: "5ml \u2022 10ml",
     video: "/videos/hero-decant.mp4",
   },
   {
@@ -38,10 +33,8 @@ const slides = [
     title: "New",
     titleAccent: "Arrivals",
     subtitle: "Fresh From The Maison",
-    description: "The latest additions to our luxury fragrance collection, exclusively curated for you",
-    cta: "View Collection",
-    ctaLink: "/shop?filter=new",
-    accent: "Limited Edition",
+    description: "The latest additions to our collection, shipped Canada wide",
+    accent: "Canada Wide Shipping",
     video: "/videos/hero-gold-liquid.mp4",
   },
 ];
@@ -78,7 +71,7 @@ export default function HeroBanner() {
         rewind
         onSwiper={playOnlyActive}
         onSlideChange={playOnlyActive}
-        className="h-[70vh] md:h-[85vh] lg:h-screen max-h-[900px]"
+        className="h-[60vh] md:h-[75vh] max-h-[760px]"
       >
         {slides.map((slide, i) => (
           <SwiperSlide key={slide.id}>
@@ -128,27 +121,10 @@ export default function HeroBanner() {
                 </h2>
 
                 {/* Description */}
-                <p className="text-gray-300 text-sm md:text-base mb-10 max-w-lg mx-auto leading-relaxed">
+                <p className="text-gray-300 text-sm md:text-base max-w-lg mx-auto leading-relaxed">
                   {slide.description}
                 </p>
 
-                {/* Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link
-                    href={slide.ctaLink}
-                    className="group relative inline-flex items-center justify-center gap-2 bg-gradient-to-r from-gold-400 to-gold-500 text-white font-semibold px-8 py-4 uppercase tracking-widest text-sm overflow-hidden transition-all duration-500 hover:shadow-gold-lg"
-                  >
-                    <span className="relative z-10">{slide.cta}</span>
-                    <ArrowRight size={16} className="relative z-10 group-hover:translate-x-1 transition-transform" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-gold-500 to-gold-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  </Link>
-                  <Link
-                    href="/decants"
-                    className="group inline-flex items-center justify-center gap-2 border border-white/20 text-white/80 font-semibold px-8 py-4 uppercase tracking-widest text-sm hover:border-gold-400/50 hover:text-gold-400 transition-all duration-500 backdrop-blur-sm"
-                  >
-                    Try Decants
-                  </Link>
-                </div>
               </div>
 
               {/* Bottom gradient fade */}

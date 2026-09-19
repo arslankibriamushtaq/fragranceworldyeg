@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { isAllowedDecantSize } from "@/lib/utils";
 
 export async function GET(req: NextRequest, { params }: { params: { slug: string } }) {
   try {
@@ -33,6 +34,9 @@ export async function PUT(req: NextRequest, { params }: { params: { slug: string
   try {
     const body = await req.json();
     const { variants, ...productData } = body;
+    if (productData.type === "DECANT" && variants?.some((v: any) => !isAllowedDecantSize(String(v.size)))) {
+      return NextResponse.json({ error: "Decants are only available in 5ml and 10ml" }, { status: 400 });
+    }
 
     // Update slug if name changed
     if (productData.name) {

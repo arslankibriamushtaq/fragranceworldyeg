@@ -3,13 +3,13 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useCartStore } from "@/store/cartStore";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, calculateShipping, FREE_SHIPPING_THRESHOLD } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import { CreditCard, Truck, Lock, CheckCircle, PartyPopper, ShoppingBag, Loader2 } from "lucide-react";
+import { CreditCard, Lock, CheckCircle, PartyPopper, ShoppingBag, Loader2 } from "lucide-react";
 
 const stripeEnabled = !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 
@@ -20,13 +20,13 @@ const checkoutSchema = z.object({
   address: z.string().min(5),
   city: z.string().min(2),
   notes: z.string().optional(),
-  paymentMethod: z.enum(["CASH_ON_DELIVERY", "STRIPE"]),
+  paymentMethod: z.literal("STRIPE"),
 });
 
 type CheckoutForm = z.infer<typeof checkoutSchema>;
 
 function ConfettiPiece({ index }: { index: number }) {
-  const colors = ["#d4af37", "#c9a227", "#f0d060", "#e8c84a", "#b8960f", "#fff3c4", "#fbbf24", "#f59e0b"];
+  const colors = ["#b88c65", "#a77a54", "#dcb68f", "#ead0b5", "#8c6444", "#ffe4d9", "#0d0b0b", "#f5e8db"];
   const color = colors[index % colors.length];
   const left = Math.random() * 100;
   const delay = Math.random() * 3;
@@ -133,19 +133,18 @@ export default function CheckoutPage() {
 
   const subtotal = getSubtotal();
   const discount = couponDiscount;
-  const shipping = subtotal >= 5000 ? 0 : 250;
+  const shipping = calculateShipping(subtotal);
   const total = getTotal() + shipping;
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<CheckoutForm>({
+  const { register, handleSubmit, formState: { errors } } = useForm<CheckoutForm>({
     resolver: zodResolver(checkoutSchema) as any,
     defaultValues: {
       name: session?.user?.name || "",
       email: session?.user?.email || "",
-      paymentMethod: "CASH_ON_DELIVERY",
+      paymentMethod: "STRIPE",
     },
   });
 
-  const paymentMethod = watch("paymentMethod");
 
   // Redirect to cart when it's empty — client-side only (never call router.push during render/SSR).
   useEffect(() => {
@@ -167,7 +166,6 @@ export default function CheckoutPage() {
 
   const onSubmit = async (data: CheckoutForm) => {
     if (status === "loading") { toast.error("Please wait..."); return; }
-    if (status === "unauthenticated") { router.push("/login?redirect=/checkout"); return; }
     if (items.length === 0) { toast.error("Cart is empty"); return; }
 
     const orderData = {
@@ -188,42 +186,23 @@ export default function CheckoutPage() {
       couponCode,
     };
 
-    if (data.paymentMethod === "STRIPE") {
-      // Create payment intent first
-      setSubmitting(true);
-      try {
-        const res = await fetch("/api/stripe/create-payment-intent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount: total }),
-        });
-        const { clientSecret, error } = await res.json();
-        if (error || !clientSecret) {
-          toast.error(error || "Failed to initialize payment");
-          return;
-        }
-        setStripeClientSecret(clientSecret);
-        setPendingOrderData(orderData);
-      } catch {
-        toast.error("Failed to initialize payment");
-      } finally {
-        setSubmitting(false);
-      }
-      return;
-    }
-
-    // COD flow - create order directly
+    // Card payments only — create the payment intent, then the order is created after payment succeeds.
     setSubmitting(true);
     try {
-      const result = await createOrder(orderData);
-      if (result) {
-        orderPlacedRef.current = true;
-        setCompletedOrderNumber(result.orderNumber);
-        setOrderSuccess(true);
-        clearCart();
+      const res = await fetch("/api/stripe/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: total }),
+      });
+      const { clientSecret, error } = await res.json();
+      if (error || !clientSecret) {
+        toast.error(error || "Failed to initialize payment");
+        return;
       }
+      setStripeClientSecret(clientSecret);
+      setPendingOrderData(orderData);
     } catch {
-      toast.error("Failed to place order");
+      toast.error("Failed to initialize payment");
     } finally {
       setSubmitting(false);
     }
@@ -385,7 +364,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Phone *</label>
-                    <input {...register("phone")} className="input-luxury" placeholder="+92 300 0000000" />
+                    <input {...register("phone")} className="input-luxury" placeholder="+1 780 000 0000" />
                     {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
                   </div>
                   <div className="sm:col-span-2">
@@ -421,29 +400,20 @@ export default function CheckoutPage() {
               <div className="bg-white border border-gray-100 p-6 shadow-sm">
                 <h2 className="font-semibold text-lg mb-4">Payment Method</h2>
                 <div className="space-y-3">
-                  <label className={`flex items-center gap-4 p-4 border-2 cursor-pointer transition-colors ${paymentMethod === "CASH_ON_DELIVERY" ? "border-gold-400 bg-gold-50" : "border-gray-200 hover:border-gray-300"}`}>
-                    <input type="radio" value="CASH_ON_DELIVERY" {...register("paymentMethod")} className="text-gold-500" />
-                    <Truck size={20} className="text-gray-600" />
+                  <div className="flex items-center gap-4 p-4 border-2 border-gold-400 bg-gold-50">
+                    <input type="hidden" value="STRIPE" {...register("paymentMethod")} />
+                    <CreditCard size={20} className="text-gray-600" />
                     <div>
-                      <p className="font-medium text-sm">Cash on Delivery</p>
-                      <p className="text-xs text-gray-500">Pay when your order arrives</p>
+                      <p className="font-medium text-sm">Credit / Debit Card</p>
+                      <p className="text-xs text-gray-500">Secure card payment via Stripe. We do not offer cash on delivery.</p>
                     </div>
-                  </label>
-                  {stripeEnabled && (
-                    <label className={`flex items-center gap-4 p-4 border-2 cursor-pointer transition-colors ${paymentMethod === "STRIPE" ? "border-gold-400 bg-gold-50" : "border-gray-200 hover:border-gray-300"}`}>
-                      <input type="radio" value="STRIPE" {...register("paymentMethod")} className="text-gold-500" />
-                      <CreditCard size={20} className="text-gray-600" />
-                      <div>
-                        <p className="font-medium text-sm">Credit/Debit Card (Stripe)</p>
-                        <p className="text-xs text-gray-500">Secure payment via Stripe</p>
-                      </div>
-                    </label>
-                  )}
+                  </div>
                 </div>
               </div>
 
-              <button type="submit" disabled={submitting} className="w-full btn-gold flex items-center justify-center gap-2 py-4 disabled:opacity-50">
-                {submitting ? <><Loader2 size={16} className="animate-spin" /> Processing...</> : <><Lock size={16} /> {paymentMethod === "STRIPE" ? "Proceed to Payment" : "Place Order"}</>}
+              {!stripeEnabled && <p className="text-xs text-red-500 text-center">Card payments are temporarily unavailable. Please contact us to complete your order.</p>}
+              <button type="submit" disabled={submitting || !stripeEnabled} className="w-full btn-gold flex items-center justify-center gap-2 py-4 disabled:opacity-50">
+                {submitting ? <><Loader2 size={16} className="animate-spin" /> Processing...</> : <><Lock size={16} /> Proceed to Payment</>}
               </button>
             </form>
           )}

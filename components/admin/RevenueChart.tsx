@@ -14,8 +14,8 @@ export default function RevenueChart({ data }: Props) {
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis dataKey="month" tick={{ fontSize: 12 }} />
           <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-          <Tooltip formatter={(value: any) => [`PKR ${value.toLocaleString()}`, "Revenue"]} />
-          <Bar dataKey="revenue" fill="#d4af37" radius={[4, 4, 0, 0]} />
+          <Tooltip formatter={(value: any) => [`CA$${value.toLocaleString()}`, "Revenue"]} />
+          <Bar dataKey="revenue" fill="#b88c65" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

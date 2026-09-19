@@ -2,14 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ui/ProductCard";
 import Image from "next/image";
-import type { Metadata } from "next";
 
 interface Props { params: { slug: string } }
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const brand = await prisma.brand.findUnique({ where: { slug: params.slug } }).catch(() => null);
-  return { title: brand?.name ? `${brand.name} Fragrances` : "Brand Not Found" };
-}
 
 export default async function BrandPage({ params }: Props) {
   const brand = await prisma.brand.findUnique({

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, useFieldArray } from "react-hook-form";
+import { DECANT_SIZES, isAllowedDecantSize } from "@/lib/utils";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
@@ -31,6 +32,9 @@ const productSchema = z.object({
     stock: z.coerce.number().min(0),
     sku: z.string().min(1),
   })).min(1, "Add at least one variant"),
+}).refine((d) => d.type !== "DECANT" || d.variants.every((v) => isAllowedDecantSize(v.size)), {
+  message: "Decants are only available in 5ml and 10ml",
+  path: ["variants"],
 });
 
 type ProductForm = z.infer<typeof productSchema>;
@@ -189,8 +193,8 @@ export default function NewProductPage() {
               </select>
             </div>
             <div>
-              <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Base Price (PKR) *</label>
-              <input {...register("basePrice")} type="number" className="input-luxury" placeholder="5000" />
+              <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Base Price (CAD) *</label>
+              <input {...register("basePrice")} type="number" className="input-luxury" placeholder="99.99" />
               {errors.basePrice && <p className="text-red-500 text-xs mt-1">{errors.basePrice.message}</p>}
             </div>
             <div>
@@ -266,19 +270,22 @@ export default function NewProductPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-gray-900">Variants (Sizes)</h2>
+            <datalist id="decant-sizes">{DECANT_SIZES.map((s) => <option key={s} value={s} />)}</datalist>
             <button type="button" onClick={() => append({ size: "", price: 0, stock: 0, sku: "" })} className="flex items-center gap-1 text-xs text-gold-500 hover:text-gold-600">
               <Plus size={14} /> Add Variant
             </button>
           </div>
+          <p className="text-xs text-gray-500 mb-3">Decants: 5ml and 10ml only.</p>
+          {(errors as any).variants?.message && <p className="text-red-500 text-xs mb-3">{(errors as any).variants.message}</p>}
           <div className="space-y-3">
             {fields.map((field, idx) => (
               <div key={field.id} className="grid grid-cols-4 gap-3 items-start">
                 <div>
                   <label className="text-xs text-gray-500 mb-1 block">Size</label>
-                  <input {...register(`variants.${idx}.size`)} className="input-luxury text-sm" placeholder="e.g., 100ml" />
+                  <input {...register(`variants.${idx}.size`)} list="decant-sizes" className="input-luxury text-sm" placeholder="e.g., 100ml" />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 mb-1 block">Price (PKR)</label>
+                  <label className="text-xs text-gray-500 mb-1 block">Price (CAD)</label>
                   <input {...register(`variants.${idx}.price`)} type="number" className="input-luxury text-sm" placeholder="8000" />
                 </div>
                 <div>

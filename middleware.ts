@@ -6,7 +6,6 @@ export default withAuth(
     const token = req.nextauth.token;
     const isAdminRoute = req.nextUrl.pathname.startsWith("/admin");
     const isDashboardRoute = req.nextUrl.pathname.startsWith("/dashboard");
-    const isCheckoutRoute = req.nextUrl.pathname.startsWith("/checkout");
 
     if (isAdminRoute && token?.role !== "ADMIN") {
       return NextResponse.redirect(new URL("/login", req.url));
@@ -18,7 +17,7 @@ export default withAuth(
     callbacks: {
       authorized: ({ token, req }) => {
         const { pathname } = req.nextUrl;
-        if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard") || pathname.startsWith("/checkout")) {
+        if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard")) {
           return !!token;
         }
         return true;
@@ -28,5 +27,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/admin/:path*", "/dashboard/:path*", "/checkout/:path*"],
+  matcher: ["/admin/:path*", "/dashboard/:path*"],
 };

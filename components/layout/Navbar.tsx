@@ -5,17 +5,29 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { ShoppingBag, Heart, Search, Menu, X, User, ChevronDown, Package, LogOut, Settings } from "lucide-react";
+import { FacebookIcon, InstagramIcon, TikTokIcon } from "@/components/ui/SocialIcons";
+import { SOCIAL_LINKS } from "@/lib/site";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import SearchModal from "@/components/ui/SearchModal";
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/shop", label: "Shop" },
-  { href: "/decants", label: "Decants" },
-  { href: "/brands", label: "Brands" },
-  { href: "/contact", label: "Contact" },
+type NavItem = { href: string; label: string; children?: { href: string; label: string }[] };
+
+const CATEGORY_LINKS = [
+  { href: "/shop?category=men-fragrances", label: "Men Fragrances" },
+  { href: "/shop?category=women-fragrances", label: "Women Fragrances" },
+  { href: "/shop?category=unisex-fragrances", label: "Unisex Fragrances" },
+  { href: "/shop?category=perfume-oils-attars", label: "Perfume Oils (Attars)" },
+  { href: "/shop?category=body-sprays-room-fresheners", label: "Body Sprays & Room Fresheners" },
+  { href: "/shop", label: "Shop All" },
+];
+
+const DECANT_LINKS = [
+  { href: "/decants", label: "All Decants" },
+  { href: "/shop?type=decant&gender=MENS", label: "Men" },
+  { href: "/shop?type=decant&gender=WOMENS", label: "Women" },
+  { href: "/shop?type=decant&gender=UNISEX", label: "Unisex" },
 ];
 
 export default function Navbar() {
@@ -27,6 +39,26 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [brands, setBrands] = useState<{ href: string; label: string }[]>([]);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/brands")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (Array.isArray(data)) setBrands(data.map((b: { slug: string; name: string }) => ({ href: `/brands/${b.slug}`, label: b.name })));
+      })
+      .catch(() => {});
+  }, []);
+
+  const navLinks: NavItem[] = [
+    { href: "/", label: "Home" },
+    { href: "/shop", label: "Categories", children: CATEGORY_LINKS },
+    { href: "/shop?filter=new", label: "New Arrivals" },
+    { href: "/brands", label: "Brands", children: [...brands, { href: "/brands", label: "View All Brands" }] },
+    { href: "/decants", label: "Decants", children: DECANT_LINKS },
+    { href: "/contact", label: "Contact" },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -46,8 +78,22 @@ export default function Navbar() {
   return (
     <>
       {/* Announcement Bar */}
-      <div className="bg-forest-900 text-gold-300 text-center py-2.5 text-xs tracking-widest uppercase">
-        Free shipping on orders over CAD 10 | Authentic Fragrances Guaranteed
+      <div className="bg-forest-900 text-gold-200 text-[11px] tracking-[0.25em] uppercase">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center sm:justify-between py-2">
+          <span className="hidden sm:block w-16" />
+          <p className="text-center">100% Authentic / Canada Wide Shipping</p>
+          <div className="hidden sm:flex items-center gap-3">
+            {[
+              { href: SOCIAL_LINKS.instagram, Icon: InstagramIcon, label: "Instagram" },
+              { href: SOCIAL_LINKS.facebook, Icon: FacebookIcon, label: "Facebook" },
+              { href: SOCIAL_LINKS.tiktok, Icon: TikTokIcon, label: "TikTok" },
+            ].map(({ href, Icon, label }) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="hover:text-white transition-colors">
+                <Icon size={13} />
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Main Navbar */}
@@ -57,9 +103,9 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 md:h-24">
+          <div className="flex items-center justify-between gap-4 h-24 md:h-28">
             {/* Mobile Menu Button */}
-            <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden p-2">
+            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-2" aria-label="Menu">
               <motion.div animate={{ rotate: mobileOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
                 {mobileOpen ? <X size={22} /> : <Menu size={22} />}
               </motion.div>
@@ -71,40 +117,65 @@ export default function Navbar() {
                 <Image
                   src="/logo.png"
                   alt="Fragrance World YEG"
-                  width={500}
-                  height={161}
+                  width={978}
+                  height={655}
                   priority
-                  className="h-16 md:h-20 w-auto object-contain"
+                  className="h-20 md:h-24 w-auto object-contain"
                 />
               </motion.div>
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="nav-link relative group"
-                >
-                  {link.label}
-                  {/* Active/hover underline */}
-                  <span
-                    className={`absolute -bottom-1 left-0 h-[2px] bg-forest-600 transition-all duration-300 ${
-                      pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
-                    }`}
-                  />
-                </Link>
-              ))}
+            <nav className="hidden lg:flex items-center gap-7">
+              {navLinks.map((link) => {
+                const active = pathname === link.href.split("?")[0] && (link.href === "/" || link.href !== "/shop");
+                return (
+                  <div key={link.label} className="relative group">
+                    <Link href={link.href} className="nav-link relative inline-flex items-center gap-1 py-2">
+                      {link.label}
+                      {link.children && <ChevronDown size={13} className="transition-transform duration-300 group-hover:rotate-180" />}
+                      <span
+                        className={`absolute bottom-0 left-0 h-[2px] bg-gold-400 transition-all duration-300 ${
+                          active ? "w-full" : "w-0 group-hover:w-full"
+                        }`}
+                      />
+                    </Link>
+                    {link.children && link.children.length > 0 && (
+                      <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-50">
+                        <div className="min-w-[230px] max-h-[70vh] overflow-y-auto bg-white border border-gold-100 shadow-luxury py-2">
+                          {link.children.map((child) => (
+                            <Link
+                              key={child.href + child.label}
+                              href={child.href}
+                              className="block px-5 py-2.5 text-sm text-forest-700 hover:bg-luxury-cream hover:text-gold-600 transition-colors whitespace-nowrap"
+                            >
+                              {child.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <button
+                onClick={() => setSearchOpen(true)}
+                aria-label="Search"
+                className="hidden xl:flex items-center gap-2 w-36 border border-gray-200 hover:border-gold-400 px-3 py-1.5 text-xs text-gray-400 transition-colors"
+              >
+                <Search size={14} />
+                Search
+              </button>
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setSearchOpen(true)}
-                className="p-2 hover:text-forest-600 transition-colors"
+                aria-label="Search"
+                className="xl:hidden p-2 hover:text-gold-500 transition-colors"
               >
                 <Search size={20} />
               </motion.button>
@@ -218,23 +289,49 @@ export default function Navbar() {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="md:hidden bg-white border-t border-gray-100 overflow-hidden"
+              className="lg:hidden bg-white border-t border-gray-100 overflow-hidden"
             >
-              <div className="px-4 py-4 space-y-1">
+              <div className="px-4 py-4 space-y-1 max-h-[75vh] overflow-y-auto">
                 {navLinks.map((link, i) => (
                   <motion.div
-                    key={link.href}
+                    key={link.label}
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: i * 0.05 }}
                   >
-                    <Link
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className={`block py-3 px-2 nav-link text-sm ${pathname === link.href ? "text-forest-600 bg-forest-50" : ""}`}
-                    >
-                      {link.label}
-                    </Link>
+                    {link.children ? (
+                      <>
+                        <button
+                          onClick={() => setMobileExpanded(mobileExpanded === link.label ? null : link.label)}
+                          className="w-full flex items-center justify-between py-3 px-2 nav-link text-sm"
+                        >
+                          {link.label}
+                          <ChevronDown size={14} className={`transition-transform ${mobileExpanded === link.label ? "rotate-180" : ""}`} />
+                        </button>
+                        {mobileExpanded === link.label && (
+                          <div className="pl-4 pb-2 border-l border-gold-200 ml-2">
+                            {link.children.map((child) => (
+                              <Link
+                                key={child.href + child.label}
+                                href={child.href}
+                                onClick={() => setMobileOpen(false)}
+                                className="block py-2 px-2 text-sm text-forest-600 hover:text-gold-500"
+                              >
+                                {child.label}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        onClick={() => setMobileOpen(false)}
+                        className={`block py-3 px-2 nav-link text-sm ${pathname === link.href ? "text-gold-600 bg-luxury-cream" : ""}`}
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </motion.div>
                 ))}
               </div>

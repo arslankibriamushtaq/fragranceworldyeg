@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState({
-    primaryColor: "#d4af37",
-    secondaryColor: "#1a1a1a",
-    accentColor: "#c9a227",
+    primaryColor: "#b88c65",
+    secondaryColor: "#0d0b0b",
+    accentColor: "#a77a54",
   });
 
   useEffect(() => {

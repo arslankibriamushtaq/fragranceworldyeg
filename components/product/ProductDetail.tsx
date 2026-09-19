@@ -5,7 +5,7 @@ import { Heart, ShoppingBag, Star, Shield, Truck, RefreshCw, Share2, ChevronDown
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useRecentlyViewedStore } from "@/store/recentlyViewedStore";
-import { formatPrice, calculateDiscountedPrice } from "@/lib/utils";
+import { formatPrice, calculateDiscountedPrice, isAllowedDecantSize } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
 import ReviewSection from "@/components/product/ReviewSection";
@@ -40,7 +40,11 @@ interface Product {
   reviews: any[];
 }
 
-export default function ProductDetail({ product }: { product: Product }) {
+export default function ProductDetail({ product: rawProduct }: { product: Product }) {
+  // Decants are only offered in 5ml / 10ml; hide any legacy sizes.
+  const product = rawProduct.type === "DECANT"
+    ? { ...rawProduct, variants: rawProduct.variants.filter((v) => isAllowedDecantSize(v.size)) }
+    : rawProduct;
   const [selectedVariant, setSelectedVariant] = useState<Variant>(product.variants[0]);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
