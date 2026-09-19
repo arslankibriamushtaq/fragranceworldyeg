@@ -108,13 +108,16 @@ export async function POST(req: NextRequest) {
       }).catch(() => {});
     }
 
-    // Send confirmation email
-    await sendOrderConfirmationEmail(
-      email,
-      orderNumber,
-      items.map((i: any) => ({ name: i.name, size: i.size, quantity: i.quantity, price: i.price })),
-      total
-    ).catch(() => {});
+    // Send confirmation email — never let a slow mail server hold up the customer's order.
+    await Promise.race([
+      sendOrderConfirmationEmail(
+        email,
+        orderNumber,
+        items.map((i: any) => ({ name: i.name, size: i.size, quantity: i.quantity, price: i.price })),
+        total
+      ).catch((err) => console.error("Order confirmation email failed:", err)),
+      new Promise((resolve) => setTimeout(resolve, 5000)),
+    ]);
 
     return NextResponse.json({ order, orderNumber, accountCreated }, { status: 201 });
   } catch (error: any) {

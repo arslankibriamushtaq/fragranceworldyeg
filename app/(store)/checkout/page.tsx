@@ -187,6 +187,7 @@ export default function CheckoutPage() {
   const createOrder = async (orderData: any, stripePaymentId?: string) => {
     const res = await fetch("/api/orders", {
       method: "POST",
+      signal: AbortSignal.timeout(30000),
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...orderData, stripePaymentId }),
     });
