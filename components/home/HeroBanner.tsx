@@ -12,21 +12,21 @@ import { Sparkles } from "lucide-react";
 const slides = [
   {
     id: 1,
-    title: "The Art of",
-    titleAccent: "Fragrance",
-    subtitle: "Authentic Arabic Perfumes",
-    description: "An extensive range of authentic Arabic perfumes and perfume oils at highly competitive prices",
-    accent: "100% Authentic",
-    video: "/videos/hero-perfume.mp4",
-  },
-  {
-    id: 2,
     title: "Exclusive",
     titleAccent: "Decants",
     subtitle: "Try Before You Commit",
     description: "Try your favourite fragrances in 5ml and 10ml decants before buying a full bottle",
     accent: "5ml \u2022 10ml",
     video: "/videos/hero-decant.mp4",
+  },
+  {
+    id: 2,
+    title: "The Art of",
+    titleAccent: "Fragrance",
+    subtitle: "Authentic Arabic Perfumes",
+    description: "An extensive range of authentic Arabic perfumes and perfume oils at highly competitive prices",
+    accent: "100% Authentic",
+    video: "/videos/hero-perfume.mp4",
   },
 ];
 
