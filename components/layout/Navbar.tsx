@@ -14,13 +14,11 @@ import SearchModal from "@/components/ui/SearchModal";
 
 type NavItem = { href: string; label: string; children?: { href: string; label: string }[] };
 
-const CATEGORY_LINKS = [
-  { href: "/shop?category=men-fragrances", label: "Men Fragrances" },
-  { href: "/shop?category=women-fragrances", label: "Women Fragrances" },
-  { href: "/shop?category=unisex-fragrances", label: "Unisex Fragrances" },
-  { href: "/shop?category=perfume-oils-attars", label: "Perfume Oils (Attars)" },
-  { href: "/shop?category=body-sprays-room-fresheners", label: "Body Sprays & Room Fresheners" },
-  { href: "/shop", label: "Shop All" },
+const SHOP_LINKS = [
+  { href: "/shop", label: "All" },
+  { href: "/shop?gender=MENS", label: "Men" },
+  { href: "/shop?gender=WOMENS", label: "Women" },
+  { href: "/shop?gender=UNISEX", label: "Unisex" },
 ];
 
 const MENU_BRAND_LIMIT = 8;
@@ -58,7 +56,7 @@ export default function Navbar() {
 
   const navLinks: NavItem[] = [
     { href: "/", label: "Home" },
-    { href: "/shop", label: "Categories", children: CATEGORY_LINKS },
+    { href: "/shop", label: "Shop", children: SHOP_LINKS },
     { href: "/shop?filter=new", label: "New Arrivals" },
     { href: "/brands", label: "Brands", children: [...brands, { href: "/brands", label: "View All Brands" }] },
     { href: "/decants", label: "Decants", children: DECANT_LINKS },
