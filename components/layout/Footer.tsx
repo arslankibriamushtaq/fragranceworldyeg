@@ -19,6 +19,14 @@ const shopLinks = [
   { href: "/decants", label: "Decants" },
 ];
 
+const categoryLinks = [
+  { href: "/shop?category=men-fragrances", label: "Men Fragrances" },
+  { href: "/shop?category=women-fragrances", label: "Women Fragrances" },
+  { href: "/shop?category=unisex-fragrances", label: "Unisex Fragrances" },
+  { href: "/shop?category=perfume-oils-attars", label: "Perfume Oils (Attars)" },
+  { href: "/shop?category=body-sprays-room-fresheners", label: "Body Sprays & Room Fresheners" },
+];
+
 const serviceLinks = [
   { href: "/dashboard", label: "My Account" },
   { href: "/track-order", label: "Track Order" },
@@ -73,7 +81,7 @@ export default function Footer() {
       {/* Main Footer */}
       <div className="py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10" staggerDelay={0.1}>
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10" staggerDelay={0.1}>
             {/* Brand */}
             <StaggerItem>
               <div>
@@ -101,6 +109,10 @@ export default function Footer() {
 
             <StaggerItem>
               <LinkList title="Shop" links={shopLinks} />
+            </StaggerItem>
+
+            <StaggerItem>
+              <LinkList title="Categories" links={categoryLinks} />
             </StaggerItem>
 
             <StaggerItem>
