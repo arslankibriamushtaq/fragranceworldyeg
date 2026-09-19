@@ -71,7 +71,7 @@ export default function HeroBanner() {
         rewind
         onSwiper={playOnlyActive}
         onSlideChange={playOnlyActive}
-        className="h-[60vh] md:h-[75vh] max-h-[760px]"
+        className="h-[calc(100svh-100px)] md:h-[calc(100svh-116px)] min-h-[480px]"
       >
         {slides.map((slide, i) => (
           <SwiperSlide key={slide.id}>
