@@ -103,7 +103,7 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4 h-24 md:h-28">
+          <div className="flex items-center justify-between gap-4 h-16 md:h-20">
             {/* Mobile Menu Button */}
             <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-2" aria-label="Menu">
               <motion.div animate={{ rotate: mobileOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
@@ -115,12 +115,12 @@ export default function Navbar() {
             <Link href="/" className="flex items-center group" aria-label="Fragrance World YEG — Home">
               <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
                 <Image
-                  src="/logo.png"
+                  src="/logo-mark.png"
                   alt="Fragrance World YEG"
-                  width={978}
-                  height={655}
+                  width={201}
+                  height={246}
                   priority
-                  className="h-20 md:h-24 w-auto object-contain"
+                  className="h-12 md:h-14 w-auto object-contain"
                 />
               </motion.div>
             </Link>
