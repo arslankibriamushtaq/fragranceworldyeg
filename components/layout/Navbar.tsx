@@ -96,7 +96,7 @@ export default function Navbar() {
     <>
       {/* Announcement Bar */}
       <div className="bg-forest-900 text-gold-200 text-[10px] sm:text-[11px] tracking-[0.12em] sm:tracking-[0.25em] uppercase whitespace-nowrap">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center sm:justify-between py-2">
+        <div className="w-full px-4 sm:px-6 lg:px-10 flex items-center justify-center sm:justify-between py-2">
           <span className="hidden sm:block w-16" />
           <p className="text-center">100% Authentic / Canada Wide Shipping</p>
           <div className="hidden sm:flex items-center gap-3">
@@ -119,7 +119,7 @@ export default function Navbar() {
           scrolled ? "shadow-lg shadow-black/5" : "shadow-sm"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-10">
           <div className="flex items-center justify-between gap-2 sm:gap-4 h-16 md:h-20">
             {/* Mobile Menu Button */}
             <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-1.5 -ml-1.5 flex-shrink-0" aria-label="Menu">
