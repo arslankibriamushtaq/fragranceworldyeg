@@ -88,7 +88,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  className="flex-1 min-w-0 text-base outline-none bg-transparent placeholder:text-forest-300 py-1.5"
+                  className="flex-1 min-w-0 text-base outline-none focus:outline-none focus-visible:outline-none focus:ring-0 border-0 bg-transparent placeholder:text-forest-300 py-1.5"
                 />
                 {loading && <Loader2 size={18} className="animate-spin text-gold-400 flex-shrink-0" />}
                 <button
