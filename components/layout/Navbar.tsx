@@ -140,7 +140,7 @@ export default function Navbar() {
                   className="h-10 sm:h-12 md:h-14 w-auto object-contain"
                 />
               </motion.div>
-              <div className="flex flex-col leading-none">
+              <div className="flex flex-col items-center text-center leading-none">
                 <span className="font-serif text-[13px] sm:text-[17px] md:text-xl font-semibold tracking-[0.14em] sm:tracking-[0.22em] whitespace-nowrap text-forest-900">FRAGRANCE</span>
                 <span className="mt-1 font-serif text-[9px] sm:text-[11px] md:text-[13px] tracking-[0.3em] sm:tracking-[0.42em] whitespace-nowrap text-gold-500">WORLD YEG</span>
               </div>
