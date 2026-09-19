@@ -23,6 +23,8 @@ const CATEGORY_LINKS = [
   { href: "/shop", label: "Shop All" },
 ];
 
+const MENU_BRAND_LIMIT = 8;
+
 const DECANT_LINKS = [
   { href: "/decants", label: "All Decants" },
   { href: "/shop?type=decant&gender=MENS", label: "Men" },
@@ -46,7 +48,10 @@ export default function Navbar() {
     fetch("/api/brands")
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
-        if (Array.isArray(data)) setBrands(data.map((b: { slug: string; name: string }) => ({ href: `/brands/${b.slug}`, label: b.name })));
+        if (!Array.isArray(data)) return;
+        // Show a short list in the menu (featured first); the rest live under "View All Brands".
+        const sorted = [...data].sort((a: { featured?: boolean }, b: { featured?: boolean }) => Number(!!b.featured) - Number(!!a.featured));
+        setBrands(sorted.slice(0, MENU_BRAND_LIMIT).map((b: { slug: string; name: string }) => ({ href: `/brands/${b.slug}`, label: b.name })));
       })
       .catch(() => {});
   }, []);
