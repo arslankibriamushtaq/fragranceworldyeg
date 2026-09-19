@@ -40,13 +40,39 @@ export default function AdminBrandsPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this brand?")) return;
+  // Set when the brand being deleted still has products — admin picks a brand to move them to.
+  const [moveDialog, setMoveDialog] = useState<{ id: string; name: string; productCount: number } | null>(null);
+  const [moveTo, setMoveTo] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
+  const deleteBrand = async (id: string, targetId?: string) => {
+    const url = targetId ? `/api/brands/${id}?moveTo=${targetId}` : `/api/brands/${id}`;
+    const res = await fetch(url, { method: "DELETE" });
+    const data = await res.json().catch(() => ({}));
+    return { res, data };
+  };
+
+  const handleDelete = async (brand: any) => {
+    if (!confirm(`Delete "${brand.name}"?`)) return;
     try {
-      const res = await fetch(`/api/brands/${id}`, { method: "DELETE" });
-      if (res.ok) { setBrands((prev) => prev.filter((b) => b.id !== id)); toast.success("Deleted"); }
-      else toast.error((await res.json().catch(() => ({}))).error || "Failed to delete", { duration: 6000 });
+      const { res, data } = await deleteBrand(brand.id);
+      if (res.ok) { setBrands((prev) => prev.filter((b) => b.id !== brand.id)); toast.success("Deleted"); }
+      else if (res.status === 409) { setMoveTo(""); setMoveDialog({ id: brand.id, name: brand.name, productCount: data.productCount }); }
+      else toast.error(data.error || "Failed to delete", { duration: 6000 });
     } catch { toast.error("Error"); }
+  };
+
+  const handleMoveAndDelete = async () => {
+    if (!moveDialog || !moveTo) { toast.error("Select a brand"); return; }
+    setDeleting(true);
+    try {
+      const { res, data } = await deleteBrand(moveDialog.id, moveTo);
+      if (res.ok) {
+        setBrands((prev) => prev.filter((b) => b.id !== moveDialog.id));
+        toast.success("Products moved and brand deleted");
+        setMoveDialog(null);
+      } else toast.error(data.error || "Failed to delete", { duration: 6000 });
+    } catch { toast.error("Error"); } finally { setDeleting(false); }
   };
 
   return (
@@ -106,7 +132,7 @@ export default function AdminBrandsPage() {
                     {brand.featured && <span className="text-[10px] bg-gold-100 text-gold-700 px-1.5 py-0.5">Featured</span>}
                   </div>
                 </div>
-                <button onClick={() => handleDelete(brand.id)} className="text-gray-400 hover:text-red-500 transition-colors p-1">
+                <button onClick={() => handleDelete(brand)} className="text-gray-400 hover:text-red-500 transition-colors p-1">
                   <Trash2 size={15} />
                 </button>
               </div>
@@ -115,6 +141,28 @@ export default function AdminBrandsPage() {
           </div>
         )}
       </div>
+      {moveDialog && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => !deleting && setMoveDialog(null)}>
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
+            <h2 className="font-semibold text-gray-900">Delete &quot;{moveDialog.name}&quot;</h2>
+            <p className="text-sm text-gray-600">
+              This brand has {moveDialog.productCount} product{moveDialog.productCount === 1 ? "" : "s"}. Choose a brand to move {moveDialog.productCount === 1 ? "it" : "them"} to, then the brand will be deleted.
+            </p>
+            <select value={moveTo} onChange={(e) => setMoveTo(e.target.value)} className="input-luxury">
+              <option value="">Select brand...</option>
+              {brands.filter((b) => b.id !== moveDialog.id).map((b) => (
+                <option key={b.id} value={b.id}>{b.name}</option>
+              ))}
+            </select>
+            <div className="flex gap-3 justify-end">
+              <button type="button" onClick={() => setMoveDialog(null)} disabled={deleting} className="btn-outline-gold">Cancel</button>
+              <button type="button" onClick={handleMoveAndDelete} disabled={deleting || !moveTo} className="bg-red-500 text-white px-4 py-2 text-sm hover:bg-red-600 disabled:opacity-50 uppercase tracking-wider">
+                {deleting ? "Deleting..." : "Move & Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
