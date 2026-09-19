@@ -12,11 +12,10 @@ const socials = [
 ];
 
 const shopLinks = [
-  { href: "/shop?category=men-fragrances", label: "Men Fragrances" },
-  { href: "/shop?category=women-fragrances", label: "Women Fragrances" },
-  { href: "/shop?category=unisex-fragrances", label: "Unisex Fragrances" },
-  { href: "/shop?category=perfume-oils-attars", label: "Perfume Oils (Attars)" },
-  { href: "/shop?category=body-sprays-room-fresheners", label: "Body Sprays & Room Fresheners" },
+  { href: "/shop", label: "All" },
+  { href: "/shop?gender=MENS", label: "Men" },
+  { href: "/shop?gender=WOMENS", label: "Women" },
+  { href: "/shop?gender=UNISEX", label: "Unisex" },
   { href: "/decants", label: "Decants" },
 ];
 

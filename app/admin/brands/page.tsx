@@ -45,7 +45,7 @@ export default function AdminBrandsPage() {
     try {
       const res = await fetch(`/api/brands/${id}`, { method: "DELETE" });
       if (res.ok) { setBrands((prev) => prev.filter((b) => b.id !== id)); toast.success("Deleted"); }
-      else toast.error("Failed to delete");
+      else toast.error((await res.json().catch(() => ({}))).error || "Failed to delete", { duration: 6000 });
     } catch { toast.error("Error"); }
   };
 
