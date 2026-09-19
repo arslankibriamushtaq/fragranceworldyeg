@@ -1,5 +1,5 @@
 // One-off: put existing fragrance products into Men / Women / Unisex Fragrances by their gender.
-// Products already in Perfume Oils (Attars) or Body Sprays & Room Fresheners are left alone.
+// Products already in Perfume Oils (Attars) or Body Sprays / Room Fresheners are left alone.
 // Dry run (shows what would change):  node prisma/assign-categories-by-gender.js
 // Apply the changes:                  node prisma/assign-categories-by-gender.js --apply
 const { PrismaClient } = require("@prisma/client");
@@ -11,7 +11,7 @@ const BY_GENDER = {
   WOMENS: { name: "Women Fragrances", slug: "women-fragrances", description: "Fragrances for women" },
   UNISEX: { name: "Unisex Fragrances", slug: "unisex-fragrances", description: "Fragrances for everyone" },
 };
-const LEAVE_ALONE = ["perfume-oils-attars", "body-sprays-room-fresheners"];
+const LEAVE_ALONE = ["perfume-oils-attars", "body-sprays", "room-fresheners"];
 
 async function main() {
   const ids = {};

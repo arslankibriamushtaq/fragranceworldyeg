@@ -24,7 +24,8 @@ const categoryLinks = [
   { href: "/shop?category=women-fragrances", label: "Women Fragrances" },
   { href: "/shop?category=unisex-fragrances", label: "Unisex Fragrances" },
   { href: "/shop?category=perfume-oils-attars", label: "Perfume Oils (Attars)" },
-  { href: "/shop?category=body-sprays-room-fresheners", label: "Body Sprays & Room Fresheners" },
+  { href: "/shop?category=body-sprays", label: "Body Sprays" },
+  { href: "/shop?category=room-fresheners", label: "Room Fresheners" },
 ];
 
 const serviceLinks = [

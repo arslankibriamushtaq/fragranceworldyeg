@@ -9,7 +9,8 @@ const CATEGORIES = [
   { name: "Women Fragrances", slug: "women-fragrances", description: "Fragrances for women" },
   { name: "Unisex Fragrances", slug: "unisex-fragrances", description: "Fragrances for everyone" },
   { name: "Perfume Oils (Attars)", slug: "perfume-oils-attars", description: "Concentrated Arabic perfume oils" },
-  { name: "Body Sprays & Room Fresheners", slug: "body-sprays-room-fresheners", description: "Body sprays and home fragrances" },
+  { name: "Body Sprays", slug: "body-sprays", description: "Body sprays" },
+  { name: "Room Fresheners", slug: "room-fresheners", description: "Home fragrances and room fresheners" },
 ];
 const BY_GENDER = { MENS: "men-fragrances", WOMENS: "women-fragrances", UNISEX: "unisex-fragrances" };
 
