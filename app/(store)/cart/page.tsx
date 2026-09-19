@@ -136,7 +136,7 @@ export default function CartPage() {
                 <span className={shipping === 0 ? "text-green-600" : ""}>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
               </div>
               {shipping > 0 && (
-                <p className="text-xs text-gray-400">Add {formatPrice(FREE_SHIPPING_THRESHOLD - subtotal)} more for free shipping</p>
+                <p className="text-xs text-gray-400">Add {formatPrice(FREE_SHIPPING_THRESHOLD - total)} more for free shipping</p>
               )}
               <div className="border-t border-gray-100 pt-2 flex justify-between font-semibold text-base">
                 <span>Total</span>

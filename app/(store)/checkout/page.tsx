@@ -164,7 +164,8 @@ export default function CheckoutPage() {
 
   const subtotal = getSubtotal();
   const discount = couponDiscount;
-  const shipping = calculateShipping(subtotal);
+  // Free shipping is based on the order value after discounts (see Shipping Policy).
+  const shipping = calculateShipping(getTotal());
   const total = getTotal() + shipping;
 
   const { register, handleSubmit, formState: { errors } } = useForm<CheckoutForm>({
