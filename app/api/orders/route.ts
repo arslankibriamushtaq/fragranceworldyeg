@@ -20,12 +20,20 @@ export async function POST(req: NextRequest) {
 
     // Confirm with Stripe that this payment really succeeded for this amount and hasn't been used before.
     if (!stripe) return NextResponse.json({ error: "Card payments are not configured" }, { status: 500 });
-    const intent = await stripe.paymentIntents.retrieve(stripePaymentId);
-    if (intent.status !== "succeeded" || intent.currency !== "cad" || intent.amount !== Math.round(Number(total) * 100)) {
-      return NextResponse.json({ error: "Payment could not be verified" }, { status: 400 });
+    // Same payment submitted again (retry / double click): return the order it already created.
+    const existingOrder = await prisma.order.findFirst({ where: { stripePaymentId }, include: { items: true } });
+    if (existingOrder) {
+      return NextResponse.json({ order: existingOrder, orderNumber: existingOrder.orderNumber }, { status: 200 });
     }
-    const alreadyUsed = await prisma.order.findFirst({ where: { stripePaymentId } });
-    if (alreadyUsed) return NextResponse.json({ error: "Payment already used for another order" }, { status: 400 });
+
+    const intent = await stripe.paymentIntents.retrieve(stripePaymentId);
+    const paid = intent.status === "succeeded";
+    if (!paid && intent.status !== "processing") {
+      return NextResponse.json({ error: `Payment not completed (status: ${intent.status})` }, { status: 400 });
+    }
+    if (intent.currency !== "cad" || intent.amount !== Math.round(Number(total) * 100)) {
+      return NextResponse.json({ error: "Payment amount does not match the order total" }, { status: 400 });
+    }
 
     // Validate stock
     for (const item of items) {
@@ -42,9 +50,9 @@ export async function POST(req: NextRequest) {
         userId: (session?.user as any)?.id || null,
         orderNumber,
         paymentMethod,
-        paymentStatus: stripePaymentId ? "PAID" : "PENDING",
-        stripePaymentId: stripePaymentId || null,
-        status: stripePaymentId ? "PROCESSING" : "PENDING",
+        paymentStatus: paid ? "PAID" : "PENDING",
+        stripePaymentId,
+        status: paid ? "PROCESSING" : "PENDING",
         subtotal: Number(subtotal),
         discount: Number(discount) || 0,
         shipping: Number(shipping) || 0,

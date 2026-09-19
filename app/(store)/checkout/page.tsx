@@ -77,18 +77,35 @@ function StripeCardForm({ clientSecret, onSuccess, onCancel }: { clientSecret: s
     loadStripe();
   }, [clientSecret]);
 
+  // Card already charged (or charging) — hand off to order creation.
+  const PAID_STATUSES = ["succeeded", "processing"];
+
   const handlePay = async () => {
     if (!stripe || !elements) return;
     setProcessing(true);
     try {
+      // If this payment already went through (e.g. a second click), don't charge again.
+      const { paymentIntent: current } = await stripe.retrievePaymentIntent(clientSecret);
+      if (current && PAID_STATUSES.includes(current.status)) {
+        onSuccess(current.id);
+        return;
+      }
+
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
         redirect: "if_required",
       });
       if (error) {
-        toast.error(error.message || "Payment failed");
-      } else if (paymentIntent && paymentIntent.status === "succeeded") {
+        const intent = error.payment_intent;
+        if (error.code === "payment_intent_unexpected_state" && intent && PAID_STATUSES.includes(intent.status)) {
+          onSuccess(intent.id);
+        } else {
+          toast.error(error.message || "Payment failed");
+        }
+      } else if (paymentIntent && PAID_STATUSES.includes(paymentIntent.status)) {
         onSuccess(paymentIntent.id);
+      } else {
+        toast.error("Payment was not completed. Please try again.");
       }
     } catch {
       toast.error("Payment failed");
@@ -218,13 +235,16 @@ export default function CheckoutPage() {
         setCompletedOrderNumber(result.orderNumber);
         setOrderSuccess(true);
         clearCart();
+        setStripeClientSecret("");
+        setPendingOrderData(null);
+      } else {
+        // Card is already charged: keep this payment open so "Pay Now" retries the order without charging again.
+        toast.error("Your payment went through but we couldn't save the order. Click Pay Now again to retry — you won't be charged twice.", { duration: 8000 });
       }
     } catch {
-      toast.error("Order creation failed after payment");
+      toast.error("Your payment went through but we couldn't save the order. Click Pay Now again to retry — you won't be charged twice.", { duration: 8000 });
     } finally {
       setSubmitting(false);
-      setStripeClientSecret("");
-      setPendingOrderData(null);
     }
   };
 
