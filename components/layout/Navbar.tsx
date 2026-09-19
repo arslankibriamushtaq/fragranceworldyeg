@@ -135,7 +135,7 @@ export default function Navbar() {
                   className="h-12 md:h-14 w-auto object-contain"
                 />
               </motion.div>
-              <div className="flex flex-col leading-none border-l border-gold-300/60 pl-3">
+              <div className="flex flex-col leading-none">
                 <span className="font-serif text-[17px] md:text-xl font-semibold tracking-[0.22em] text-forest-900">FRAGRANCE</span>
                 <span className="mt-1 font-serif text-[11px] md:text-[13px] tracking-[0.42em] text-gold-500">WORLD YEG</span>
               </div>
@@ -181,10 +181,10 @@ export default function Navbar() {
               <button
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
-                className="hidden xl:flex items-center gap-2 w-44 rounded-full bg-luxury-cream border border-gold-200/70 hover:border-gold-400 hover:bg-white px-3.5 py-2 text-xs text-forest-400 transition-all duration-300"
+                className="hidden xl:flex items-center gap-2 w-36 rounded-full bg-luxury-cream border border-gold-200/70 hover:border-gold-400 hover:bg-white px-3.5 py-2 text-xs text-forest-400 transition-all duration-300"
               >
                 <Search size={14} className="text-gold-500" />
-                <span className="flex-1 text-left">Search perfumes...</span>
+                <span className="flex-1" />
                 <kbd className="text-[10px] font-sans text-forest-300 border border-gold-200 rounded px-1">⌘K</kbd>
               </button>
               <motion.button

@@ -86,7 +86,6 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder="Search perfumes, brands, attars..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   className="flex-1 min-w-0 text-base outline-none bg-transparent placeholder:text-forest-300 py-1.5"
