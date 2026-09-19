@@ -52,7 +52,7 @@ function ConfettiPiece({ index }: { index: number }) {
   );
 }
 
-function StripeCardForm({ clientSecret, onSuccess, onCancel }: { clientSecret: string; onSuccess: (paymentIntentId: string) => void; onCancel: () => void }) {
+function StripeCardForm({ clientSecret, onSuccess, onCancel }: { clientSecret: string; onSuccess: (paymentIntentId: string) => Promise<void>; onCancel: () => void }) {
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvc, setCvc] = useState("");
@@ -82,14 +82,26 @@ function StripeCardForm({ clientSecret, onSuccess, onCancel }: { clientSecret: s
   // Card already charged (or charging) — hand off to order creation.
   const PAID_STATUSES = ["succeeded", "processing"];
 
+  // Stripe can report a non-final status right after confirmation even though the charge
+  // goes through a moment later — re-check the intent a few times before giving up.
+  const waitForPaidIntent = async () => {
+    for (let i = 0; i < 6; i++) {
+      const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret);
+      if (paymentIntent && PAID_STATUSES.includes(paymentIntent.status)) return paymentIntent;
+      if (paymentIntent && paymentIntent.status === "requires_payment_method") return null;
+      await new Promise((r) => setTimeout(r, 1000));
+    }
+    return null;
+  };
+
   const handlePay = async () => {
-    if (!stripe || !elements) return;
+    if (!stripe || !elements || processing) return;
     setProcessing(true);
     try {
       // If this payment already went through (e.g. a second click), don't charge again.
       const { paymentIntent: current } = await stripe.retrievePaymentIntent(clientSecret);
       if (current && PAID_STATUSES.includes(current.status)) {
-        onSuccess(current.id);
+        await onSuccess(current.id);
         return;
       }
 
@@ -97,17 +109,16 @@ function StripeCardForm({ clientSecret, onSuccess, onCancel }: { clientSecret: s
         elements,
         redirect: "if_required",
       });
-      if (error) {
-        const intent = error.payment_intent;
-        if (error.code === "payment_intent_unexpected_state" && intent && PAID_STATUSES.includes(intent.status)) {
-          onSuccess(intent.id);
-        } else {
-          toast.error(error.message || "Payment failed");
-        }
-      } else if (paymentIntent && PAID_STATUSES.includes(paymentIntent.status)) {
-        onSuccess(paymentIntent.id);
+      if (paymentIntent && PAID_STATUSES.includes(paymentIntent.status)) {
+        await onSuccess(paymentIntent.id);
+        return;
+      }
+
+      const paid = await waitForPaidIntent();
+      if (paid) {
+        await onSuccess(paid.id);
       } else {
-        toast.error("Payment was not completed. Please try again.");
+        toast.error(error?.message || "Payment was not completed. Please try again.");
       }
     } catch {
       toast.error("Payment failed");

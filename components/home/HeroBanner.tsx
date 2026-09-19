@@ -91,7 +91,7 @@ export default function HeroBanner() {
                 playsInline
                 preload={i === 0 ? "auto" : "none"}
                 poster={slide.video.replace(".mp4", ".jpg")}
-                className="absolute inset-0 w-full h-full object-contain opacity-70"
+                className="absolute inset-0 w-full h-full object-cover md:object-contain opacity-70"
               >
                 <source src={slide.video} type="video/mp4" />
               </video>

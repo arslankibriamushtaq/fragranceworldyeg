@@ -93,7 +93,7 @@ export default function Navbar() {
   return (
     <>
       {/* Announcement Bar */}
-      <div className="bg-forest-900 text-gold-200 text-[11px] tracking-[0.25em] uppercase">
+      <div className="bg-forest-900 text-gold-200 text-[10px] sm:text-[11px] tracking-[0.12em] sm:tracking-[0.25em] uppercase whitespace-nowrap">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center sm:justify-between py-2">
           <span className="hidden sm:block w-16" />
           <p className="text-center">100% Authentic / Canada Wide Shipping</p>
@@ -118,29 +118,29 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4 h-16 md:h-20">
+          <div className="flex items-center justify-between gap-2 sm:gap-4 h-16 md:h-20">
             {/* Mobile Menu Button */}
-            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-2" aria-label="Menu">
+            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-1.5 -ml-1.5 flex-shrink-0" aria-label="Menu">
               <motion.div animate={{ rotate: mobileOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
                 {mobileOpen ? <X size={22} /> : <Menu size={22} />}
               </motion.div>
             </button>
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group" aria-label="Fragrance World YEG — Home">
-              <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0 group" aria-label="Fragrance World YEG — Home">
+              <motion.div className="flex-shrink-0" whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
                 <Image
                   src="/logo-mark.png"
                   alt="Fragrance World YEG"
                   width={201}
                   height={246}
                   priority
-                  className="h-12 md:h-14 w-auto object-contain"
+                  className="h-10 sm:h-12 md:h-14 w-auto object-contain"
                 />
               </motion.div>
               <div className="flex flex-col leading-none">
-                <span className="font-serif text-[17px] md:text-xl font-semibold tracking-[0.22em] text-forest-900">FRAGRANCE</span>
-                <span className="mt-1 font-serif text-[11px] md:text-[13px] tracking-[0.42em] text-gold-500">WORLD YEG</span>
+                <span className="font-serif text-[13px] sm:text-[17px] md:text-xl font-semibold tracking-[0.14em] sm:tracking-[0.22em] whitespace-nowrap text-forest-900">FRAGRANCE</span>
+                <span className="mt-1 font-serif text-[9px] sm:text-[11px] md:text-[13px] tracking-[0.3em] sm:tracking-[0.42em] whitespace-nowrap text-gold-500">WORLD YEG</span>
               </div>
             </Link>
 
@@ -180,7 +180,7 @@ export default function Navbar() {
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center space-x-1 sm:space-x-2">
+            <div className="flex items-center flex-shrink-0 sm:space-x-2">
               <button
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
@@ -195,13 +195,13 @@ export default function Navbar() {
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
-                className="xl:hidden p-2 hover:text-gold-500 transition-colors"
+                className="xl:hidden p-1.5 sm:p-2 hover:text-gold-500 transition-colors"
               >
                 <Search size={20} />
               </motion.button>
 
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                <Link href="/wishlist" className="p-2 hover:text-forest-600 transition-colors relative block">
+                <Link href="/wishlist" className="p-1.5 sm:p-2 hover:text-forest-600 transition-colors relative block">
                   <Heart size={20} />
                   <AnimatePresence>
                     {wishlistCount > 0 && (
@@ -219,7 +219,7 @@ export default function Navbar() {
               </motion.div>
 
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                <Link href="/cart" className="p-2 hover:text-forest-600 transition-colors relative block">
+                <Link href="/cart" className="p-1.5 sm:p-2 hover:text-forest-600 transition-colors relative block">
                   <ShoppingBag size={20} />
                   <AnimatePresence>
                     {itemCount > 0 && (
@@ -242,7 +242,7 @@ export default function Navbar() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={(e) => { e.stopPropagation(); setUserMenuOpen(!userMenuOpen); }}
-                  className="flex items-center space-x-1 p-2 hover:text-forest-600 transition-colors"
+                  className="flex items-center space-x-1 p-1.5 sm:p-2 hover:text-forest-600 transition-colors"
                 >
                   <User size={20} />
                   {session && (
