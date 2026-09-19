@@ -48,27 +48,51 @@ export async function PUT(req: NextRequest, { params }: { params: { slug: string
     if (productData.basePrice) productData.basePrice = Number(productData.basePrice);
     if (productData.discount !== undefined) productData.discount = Number(productData.discount);
 
-    const product = await prisma.product.update({
+    const existing = await prisma.product.findUnique({
       where: { slug: params.slug },
-      data: {
-        ...productData,
-        // Delete old variants and create new ones
-        ...(variants && {
-          variants: {
-            deleteMany: {},
-            create: variants.map((v: any) => ({
-              size: v.size,
-              price: Number(v.price),
-              stock: Number(v.stock),
-              sku: v.sku,
-            })),
-          },
-        }),
-      },
+      include: { variants: { include: { _count: { select: { orderItems: true } } } } },
+    });
+    if (!existing) return NextResponse.json({ error: "Product not found" }, { status: 404 });
+
+    // Drop fields Prisma won't accept in an update.
+    delete productData.id;
+    delete productData.variants;
+
+    await prisma.product.update({ where: { id: existing.id }, data: productData });
+
+    // Sync variants in place. Variants that appear on past orders can't be deleted
+    // (orders reference them), so a removed variant with orders is kept at 0 stock.
+    if (Array.isArray(variants)) {
+      const keepIds = new Set<string>();
+      for (const v of variants) {
+        const data = { size: String(v.size), price: Number(v.price), stock: Number(v.stock), sku: String(v.sku) };
+        const match = existing.variants.find((ev) => ev.id === v.id);
+        if (match) {
+          await prisma.variant.update({ where: { id: match.id }, data });
+          keepIds.add(match.id);
+        } else {
+          await prisma.variant.create({ data: { ...data, productId: existing.id } });
+        }
+      }
+      for (const ev of existing.variants) {
+        if (keepIds.has(ev.id)) continue;
+        if (ev._count.orderItems > 0) {
+          await prisma.variant.update({ where: { id: ev.id }, data: { stock: 0 } });
+        } else {
+          await prisma.variant.delete({ where: { id: ev.id } });
+        }
+      }
+    }
+
+    const product = await prisma.product.findUnique({
+      where: { id: existing.id },
       include: { brand: true, category: true, variants: true },
     });
     return NextResponse.json(product);
   } catch (error: any) {
+    if (error?.code === "P2002") {
+      return NextResponse.json({ error: "A product with this name or a variant with this SKU already exists" }, { status: 400 });
+    }
     return NextResponse.json({ error: error.message || "Failed to update product" }, { status: 500 });
   }
 }

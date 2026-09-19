@@ -159,6 +159,15 @@ export default function EditProductPage() {
     }
   };
 
+  // Surface validation errors — some fields have no inline message, so Save looked like it did nothing.
+  const onInvalid = (errs: Record<string, any>) => {
+    // Walk down to the first error that has a message (variants errors are nested per row/field).
+    const firstMessage = (e: any): string | undefined =>
+      e?.message || (e && typeof e === "object" ? Object.entries(e).filter(([k]) => k !== "ref").map(([, v]) => firstMessage(v)).find(Boolean) : undefined);
+    const [field, err] = Object.entries(errs)[0] || [];
+    toast.error(field ? `${field}: ${firstMessage(err) || "please check this field"}` : "Please check the form");
+  };
+
   const onSubmit = async (data: ProductForm) => {
     if (images.length === 0) { toast.error("Upload at least one image"); return; }
     setSubmitting(true);
@@ -214,7 +223,7 @@ export default function EditProductPage() {
         <h1 className="text-2xl font-bold text-gray-900">Edit Product</h1>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit as any)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit as any, onInvalid)} className="space-y-6">
         {/* Basic Info */}
         <div className="bg-white rounded-lg shadow p-6 space-y-4">
           <h2 className="font-semibold text-gray-900 mb-4">Basic Information</h2>
