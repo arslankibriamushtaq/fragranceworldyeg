@@ -22,7 +22,7 @@ const shopLinks = [
 
 const serviceLinks = [
   { href: "/dashboard", label: "My Account" },
-  { href: "/dashboard/orders", label: "Track Order" },
+  { href: "/track-order", label: "Track Order" },
   { href: "/shipping-policy", label: "Shipping Policy" },
   { href: "/return-policy", label: "Return Policy" },
   { href: "/contact", label: "Contact Us" },

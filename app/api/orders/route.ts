@@ -5,13 +5,14 @@ import { authOptions } from "@/lib/auth";
 import { generateOrderNumber } from "@/lib/utils";
 import { sendOrderConfirmationEmail } from "@/lib/mail";
 import { stripe } from "@/lib/stripe";
+import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
 
   try {
     const body = await req.json();
-    const { items, paymentMethod, stripePaymentId, name, phone, email, address, city, notes, couponCode, subtotal, discount, shipping, total } = body;
+    const { items, paymentMethod, stripePaymentId, name, phone, email, address, city, notes, couponCode, subtotal, discount, shipping, total, password } = body;
 
     // Card payments only — no cash on delivery.
     if (paymentMethod !== "STRIPE" || !stripePaymentId) {
@@ -43,11 +44,28 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Guest checkout: link the order to the account for this email, or create one if a password was given.
+    let userId: string | null = (session?.user as any)?.id || null;
+    let accountCreated = false;
+    if (!userId && email) {
+      const normalizedEmail = String(email).trim(); // match login/register, which use the email as typed
+      const existingUser = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+      if (existingUser) {
+        userId = existingUser.id;
+      } else if (typeof password === "string" && password.length >= 6) {
+        const user = await prisma.user.create({
+          data: { name, email: normalizedEmail, phone, password: await bcrypt.hash(password, 12) },
+        });
+        userId = user.id;
+        accountCreated = true;
+      }
+    }
+
     const orderNumber = generateOrderNumber();
 
     const order = await prisma.order.create({
       data: {
-        userId: (session?.user as any)?.id || null,
+        userId,
         orderNumber,
         paymentMethod,
         paymentStatus: paid ? "PAID" : "PENDING",
@@ -98,7 +116,7 @@ export async function POST(req: NextRequest) {
       total
     ).catch(() => {});
 
-    return NextResponse.json({ order, orderNumber }, { status: 201 });
+    return NextResponse.json({ order, orderNumber, accountCreated }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "Failed to create order" }, { status: 500 });
   }

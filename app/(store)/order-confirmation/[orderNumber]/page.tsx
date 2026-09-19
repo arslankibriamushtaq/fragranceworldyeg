@@ -137,7 +137,7 @@ export default function OrderConfirmationPage() {
             style={{ animation: showContent ? "slide-up 0.5s ease-out 0.6s both" : "none" }}
           >
             <Link
-              href="/dashboard/orders"
+              href={`/track-order?order=${encodeURIComponent(orderNumber)}`}
               className="btn-gold inline-flex items-center justify-center gap-2 px-6 py-3"
             >
               Track Your Order

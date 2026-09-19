@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { useCartStore } from "@/store/cartStore";
 import { formatPrice, calculateShipping, FREE_SHIPPING_THRESHOLD } from "@/lib/utils";
 import { useForm } from "react-hook-form";
@@ -20,6 +20,8 @@ const checkoutSchema = z.object({
   address: z.string().min(5),
   city: z.string().min(2),
   notes: z.string().optional(),
+  // Optional: guests can set a password to create an account with this order.
+  password: z.union([z.literal(""), z.string().min(6, "Password must be at least 6 characters")]).optional(),
   paymentMethod: z.literal("STRIPE"),
 });
 
@@ -144,6 +146,7 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [completedOrderNumber, setCompletedOrderNumber] = useState("");
+  const [completedEmail, setCompletedEmail] = useState("");
   const [stripeClientSecret, setStripeClientSecret] = useState("");
   const [pendingOrderData, setPendingOrderData] = useState<any>(null);
   const orderPlacedRef = useRef(false);
@@ -233,6 +236,10 @@ export default function CheckoutPage() {
       if (result) {
         orderPlacedRef.current = true;
         setCompletedOrderNumber(result.orderNumber);
+        setCompletedEmail(pendingOrderData.email);
+        if (result.accountCreated && pendingOrderData.password) {
+          await signIn("credentials", { email: pendingOrderData.email, password: pendingOrderData.password, redirect: false }).catch(() => {});
+        }
         setOrderSuccess(true);
         clearCart();
         setStripeClientSecret("");
@@ -334,7 +341,7 @@ export default function CheckoutPage() {
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center" style={{ animation: "slide-up 0.5s ease-out 0.9s both" }}>
               <button
-                onClick={() => router.push("/dashboard/orders")}
+                onClick={() => router.push(`/track-order?order=${encodeURIComponent(completedOrderNumber)}&email=${encodeURIComponent(completedEmail)}`)}
                 className="btn-gold inline-flex items-center justify-center gap-2 px-8 py-3"
               >
                 <ShoppingBag size={16} />
@@ -392,6 +399,16 @@ export default function CheckoutPage() {
                     <input {...register("email")} type="email" className="input-luxury" placeholder="your@email.com" />
                     {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
                   </div>
+                  {status === "unauthenticated" && (
+                    <div className="sm:col-span-2">
+                      <label className="text-xs uppercase tracking-wider text-gray-600 mb-1 block">Create a Password (Optional)</label>
+                      <input {...register("password")} type="password" autoComplete="new-password" className="input-luxury" />
+                      <p className="text-xs text-gray-400 mt-1">
+                        Set a password to create an account, so you can log in later to see your orders. You can also track any order without an account.
+                      </p>
+                      {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+                    </div>
+                  )}
                 </div>
               </div>
 
