@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Phone, Mail, MapPin, Send } from "lucide-react";
 import toast from "react-hot-toast";
-import { CONTACT, SOCIAL_LINKS } from "@/lib/site";
+import { CONTACT, SOCIAL_LINKS, BUSINESS_HOURS } from "@/lib/site";
 import { FacebookIcon, InstagramIcon, TikTokIcon } from "@/components/ui/SocialIcons";
 
 export default function ContactPage() {
@@ -73,8 +73,11 @@ export default function ContactPage() {
 
             <div className="mt-6 pt-6 border-t border-gray-700">
               <p className="text-sm text-gray-400">Business Hours</p>
-              <p className="text-sm text-gray-300 mt-2">Mon - Sat: 10:00 AM - 8:00 PM</p>
-              <p className="text-sm text-gray-300">Sunday: 12:00 PM - 6:00 PM</p>
+              <div className="mt-2">
+                {BUSINESS_HOURS.map((h) => (
+                  <p key={h.days} className="text-sm text-gray-300">{h.days}: {h.hours}</p>
+                ))}
+              </div>
             </div>
           </div>
         </div>

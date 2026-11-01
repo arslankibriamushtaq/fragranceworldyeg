@@ -129,20 +129,20 @@ export default function Navbar() {
             </button>
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0 group" aria-label="Fragrance World YEG — Home">
+            <Link href="/" className="flex items-end min-w-0 group" aria-label="Fragrance World YEG — Home">
               <motion.div className="flex-shrink-0" whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
                 <Image
                   src="/logo-mark.png"
                   alt="Fragrance World YEG"
-                  width={201}
-                  height={246}
+                  width={598}
+                  height={548}
                   priority
-                  className="h-10 sm:h-12 md:h-14 w-auto object-contain"
+                  className="h-12 sm:h-14 md:h-16 w-auto object-contain"
                 />
               </motion.div>
-              <div className="flex flex-col items-center text-center leading-none">
+              <div className="flex flex-col items-center text-center leading-none -ml-[12px] sm:-ml-[12px] md:-ml-[12px] mb-[3px] sm:mb-[4px] md:mb-[5px]">
                 <span className="font-serif text-[13px] sm:text-[17px] md:text-xl font-semibold tracking-[0.14em] sm:tracking-[0.22em] whitespace-nowrap text-forest-900">FRAGRANCE</span>
-                <span className="mt-1 font-serif text-[9px] sm:text-[11px] md:text-[13px] tracking-[0.3em] sm:tracking-[0.42em] whitespace-nowrap text-gold-500">WORLD YEG</span>
+                <span className="mt-1 font-serif text-[9px] sm:text-[11px] md:text-[13px] font-semibold tracking-[0.3em] sm:tracking-[0.42em] whitespace-nowrap text-forest-900">WORLD YEG</span>
               </div>
             </Link>
 
